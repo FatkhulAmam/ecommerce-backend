@@ -106,24 +106,24 @@ app.put('/items/:id', (req,res) => {
     const {name, price, description} = req.body
     db.query(`UPDATE items SET name = '${name}', price = ${price}, description = '${description}' WHERE id = ${req.params.id}`, (err, result,field) => {
         if(!err){
-            res.status(205).send({
+            res.status(201).send({
                 succes: true,
-                message: 'data is created',
+                message: 'Data has been updated',
                 data: req.body
             })
         } else {
             res.status(400).send({
                 succes: false,
-                message: 'bad request'
+                message: 'Internal server error'
             })
         }
     })
 })
 
 app.patch('/items/:id', (req,res) => {
-    const {name, price, description}=req.body
-    let sqlQuery = `UPDATE items SET name=${name}, price${price}, description=${description} WHERE id = ${req.params.id}`
-    db.query(sqlQuery, (err, result, field) => {
+    const key = Object.keys(req.body)
+    const value = Object.values(req.body)
+    db.query(`UPDATE items SET ${key} = '${value}' WHERE id = ${req.params.id}`, (err, result, field) => {
         if(!err){
             res.status(201).send({
                 succes: true,
