@@ -106,15 +106,15 @@ app.put('/items/:id', (req,res) => {
     const {name, price, description} = req.body
     db.query(`UPDATE items SET name = '${name}', price = ${price}, description = '${description}' WHERE id = ${req.params.id}`, (err, result,field) => {
         if(!err){
-            res.status(201).send({
+            res.status(205).send({
                 succes: true,
-                message: 'Data has been updated',
+                message: 'data is created',
                 data: req.body
             })
         } else {
-            res.status().send({
+            res.status(400).send({
                 succes: false,
-                message: 'Internal server error'
+                message: 'bad request'
             })
         }
     })
@@ -127,13 +127,13 @@ app.patch('/items/:id', (req,res) => {
         if(!err){
             res.status(201).send({
                 succes: true,
-                message: 'Data has been updated',
+                message: 'Data update',
                 data: req.body
             })
         } else {
             res.status(400).send({
                 succes: false,
-                message: 'Internal server error'
+                message: 'bad request'
             })
         }
     })
@@ -144,13 +144,13 @@ app.delete('/items/:id', (req,res) => {
         if(!err){
             res.status(201).send({
                 succes: true,
-                message: 'Data has been deleted',
+                message: 'deleted!!',
                 data: null
             })
         } else {
             res.status(400).send({
                 succes: false,
-                message: 'Internal server error'
+                message: 'bad request'
             })
         }
     })
@@ -161,13 +161,13 @@ app.get('/items/:id', (req,res) => {
         if(!err){
             res.status(201).send({
                 succes: true,
-                message: `Showing data from id : ${req.params.id}`,
+                message: 'showing...',
                 data: result
             })
         } else {
             res.status(400).send({
                 succes: false,
-                message: 'Internal server error'
+                message: 'bad request'
             })
         }
     })
