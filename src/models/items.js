@@ -27,13 +27,13 @@ module.exports = {
       cb(result)
     })
   },
-  getAllItemModel: (arr, cb) => {
-    db.query(`SELECT * FROM ${table} WHERE '${arr[0]}' LIKE '%${arr[1]}%' LIMIT ${arr[2]} OFFSET ${arr[3]}`, (_err, result, field) => {
+  getAllItemModel: (arr, sort, num, cb) => {
+    db.query(`SELECT * FROM ${table} WHERE ${arr[0]} LIKE '%${arr[1]}%' ORDER BY ${sort[0]} ${sort[1]} LIMIT ${num[0]} OFFSET ${num[1]}`, (_err, result, field) => {
       cb(_err, result)
     })
   },
-  searchItemModel: (arr, cb) => {
-    db.query(`SELECT COUNT(*) AS count FROM ${table} WHERE ${arr[0]} LIKE '%${arr[1]}%'`, (_err, result, field) => {
+  searchItemModel: (search, sort, cb) => {
+    db.query(`SELECT COUNT(*) AS count FROM ${table} WHERE ${search[0]} LIKE '%${search[1]}%' ORDER BY ${sort[0]} ${sort[1]}`, (_err, result, field) => {
       cb(result)
     })
   }
