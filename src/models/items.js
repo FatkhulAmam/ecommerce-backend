@@ -8,12 +8,12 @@ module.exports = {
     })
   },
   createItemModel: (arr, cb) => {
-    db.query(`INSERT INTO ${table} (name, price, description) VALUES ('${arr[0]}', ${arr[1]}, '${arr[2]}')`, (_err, result, field) => {
+    db.query(`INSERT INTO ${table} (name, price, description, category) VALUES ("${arr[0]}", ${arr[1]}, "${arr[2]}", ${arr[3]})`, (_err, result, field) => {
       cb(_err, result)
     })
   },
-  updateItemModel: (arr, cb) => {
-    db.query(`UPDATE ${table} SET name='${arr[0]}', price= ${arr[1]}, description='${arr[2]}' WHERE id=${arr[3]}`, (_err, hasil, field) => {
+  updateItemModel: (arr, id, cb) => {
+    db.query(`UPDATE ${table} SET name="${arr[0]}", price= ${arr[1]}, description="${arr[2]}", category_name= ${arr[3]} WHERE id=${id}`, (_err, hasil, field) => {
       cb(hasil)
     })
   },
@@ -37,4 +37,7 @@ module.exports = {
       cb(result)
     })
   }
+  // joinItemModel: () => {
+  //   db.query(`SELECT items.id, items.name, items.price, items.description, category.category_name FROM items LEFT JOIN category ON items.category_name = category.id`)
+  // }
 }

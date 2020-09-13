@@ -23,9 +23,9 @@ module.exports = {
   },
   // membuat data dengan mesmaukkan name, price, dan description
   createItem: (req, res) => {
-    const { name, price, description } = req.body
-    if (name && price && description) {
-      createItemModel([name, price, description], (err, result) => {
+    const { name, price, description, category } = req.body
+    if (name && price && description && category) {
+      createItemModel([name, price, description, category], (err, result) => {
         if (!err) {
           res.status(201).send({
             success: true,
@@ -58,7 +58,7 @@ module.exports = {
     if (typeof sort === 'object') {
       sortBy = Object.keys(sort)[0]
       sortFrom = Object.values(sort)[0]
-    }else {
+    } else {
       sortBy = 'id'
       sortFrom = sort || ''
     }
@@ -130,11 +130,11 @@ module.exports = {
   // merubah seluruh data pada index yang diminta
   updateItem: (req, res) => {
     const { id } = req.params
-    const { name, price, description } = req.body
-    if (name.trim() && price.trim() && description.trim()) {
+    const { name, price, description, categoryName } = req.body
+    if (name.trim() && price.trim() && description.trim() && categoryName.trim()) {
       getItemModel(id, result => {
         if (result.length) {
-          updateItemModel([name, price, description, id], hasil => {
+          updateItemModel([name, price, description, categoryName], id, hasil => {
             if (hasil.affectedRows) {
               res.status(200).send({
                 success: true,
