@@ -1,5 +1,6 @@
 const db = require('../helpers/db')
 const table = 'items'
+const table1 = 'category'
 
 module.exports = {
   getItemModel: (id, cb) => {
@@ -28,16 +29,21 @@ module.exports = {
     })
   },
   getAllItemModel: (arr, sort, num, cb) => {
-    db.query(`SELECT * FROM ${table} WHERE ${arr[0]} LIKE '%${arr[1]}%' ORDER BY ${sort[0]} ${sort[1]} LIMIT ${num[0]} OFFSET ${num[1]}`, (_err, result, field) => {
+    db.query(`
+    SELECT ${table}.id, ${table1}.category_name, ${table}.name, ${table}.price, ${table}.description, ${table}.input_date, ${table}.update_date 
+    FROM ${table} INNER JOIN ${table1} ON ${table}.category = ${table1}.id
+    WHERE ${arr[0]} 
+    LIKE '%${arr[1]}%' 
+    ORDER BY ${sort[0]} ${sort[1]} 
+    LIMIT ${num[0]} 
+    OFFSET ${num[1]}`,
+    (_err, result, field) => {
       cb(_err, result)
     })
   },
   searchItemModel: (search, sort, cb) => {
-    db.query(`SELECT COUNT(*) AS count FROM ${table} WHERE ${search[0]} LIKE '%${search[1]}%' ORDER BY ${sort[0]} ${sort[1]}`, (_err, result, field) => {
+    db.query(`SELECT COUNT(*) AS count FROM ${table} WHERE ${search[0]} LIKE '%${search[1]}%' ORDER BY ${sort[0]} ${sort[1]} `, (_err, result, field) => {
       cb(result)
     })
   }
-  // joinItemModel: () => {
-  //   db.query(`SELECT items.id, items.name, items.price, items.description, category.category_name FROM items LEFT JOIN category ON items.category_name = category.id`)
-  // }
 }

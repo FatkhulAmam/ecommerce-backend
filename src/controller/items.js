@@ -165,8 +165,8 @@ module.exports = {
   // merubah sebagian data
   updateItemPartial: (req, res) => {
     const { id } = req.params
-    const { name = '', price = '', description = '' } = req.body
-    if (name.trim() || price.trim() || description.trim()) {
+    const { name = '', price = '', description = '', category = '' } = req.body
+    if (name.trim() || price.trim() || description.trim() || category.trim()) {
       getItemModel(id, result => {
         if (result.length) {
           const data = Object.entries(req.body).map(item => {
