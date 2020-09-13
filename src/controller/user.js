@@ -84,8 +84,11 @@ module.exports = {
     if (userName.trim() || email.trim() || password.trim()) {
       getProfileModel(id, result => {
         if (result.length) {
-          updatePartProfileModel(id, [userName, email, password], result => {
-            if (result.affectedRows > 0) {
+          const data = Object.entries(req.body).map(item => {
+            return parseInt(item[1]) > 0 ? `${item[0]}=${item[1]}` : `${item[0]}='${item[1]}'`
+          })
+          updatePartProfileModel(id, data, result => {
+            if (result.affectedRows) {
               res.send({
                 success: true,
                 message: `profile id ${id} updated`,

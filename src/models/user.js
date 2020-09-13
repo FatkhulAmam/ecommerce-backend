@@ -17,8 +17,8 @@ module.exports = {
       cb(hasil)
     })
   },
-  updatePartProfileModel: (id, arr, cb) => {
-    db.query(`UPDATE ${table} SET SET user_name="${arr[0]}", email= '${arr[1]}', password="${arr[2]}" WHERE id=${id}`, (_err, result, field) => {
+  updatePartProfileModel: (id, data, cb) => {
+    db.query(`UPDATE ${table} SET ${data} WHERE id=${id}`, (_err, result, field) => {
       cb(result)
     })
   },
