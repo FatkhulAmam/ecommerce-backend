@@ -1,5 +1,5 @@
 const { qs } = require('querystring')
-const { createCartModel, getCartModel, searchCartModel, getCartUserModel } = require('../models/cart')
+const { createCartModel, getCartModel, searchCartModel, getCartUserModel, getCartDelModel, deleteItemModel } = require('../models/cart')
 
 module.exports = {
   createCart: (req, res) => {
@@ -121,6 +121,31 @@ module.exports = {
         res.send({
           success: false,
           message: 'error'
+        })
+      }
+    })
+  },
+  deleteItem: (req, res) => {
+    const { id } = req.params
+    getCartDelModel(id, result => {
+      if (result.length) {
+        deleteItemModel(id, result => {
+          if (result.affectedRows) {
+            res.send({
+              succcess: true,
+              message: `id ${id} deleted!`
+            })
+          } else {
+            res.send({
+              succes: false,
+              message: 'cannot delete data!!'
+            })
+          }
+        })
+      } else {
+        res.send({
+          success: false,
+          message: 'no data founded'
         })
       }
     })

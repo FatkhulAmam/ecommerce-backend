@@ -30,10 +30,18 @@ module.exports = {
     })
   },
   getCartUserModel: (id, cb) => {
-    db.query(`
-    SELECT * FROM ${table1}
-    WHERE id=${id}`, (err, result, field) => {
-      cb(err, result)
+    db.query(`SELECT * FROM ${table1} WHERE id=${id}`, (_err, result, field) => {
+      cb(_err, result)
+    })
+  },
+  getCartDelModel: (id, cb) => {
+    db.query(`SELECT * FROM ${table1} WHERE id=${id}`, (_err, result, field) => {
+      cb(result)
+    })
+  },
+  deleteItemModel: (id, cb) => {
+    db.query(`DELETE FROM ${table1} WHERE id= ${id}`, (_err, result, field) => {
+      cb(result)
     })
   }
 }
