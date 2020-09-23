@@ -9,12 +9,12 @@ module.exports = {
     })
   },
   createItemModel: (arr, cb) => {
-    db.query(`INSERT INTO ${table} (name, price, description, category) VALUES ("${arr[0]}", ${arr[1]}, "${arr[2]}", ${arr[3]})`, (_err, result, field) => {
+    db.query(`INSERT INTO ${table} (name, price, description, category, image_url) VALUES ("${arr[0]}", ${arr[1]}, "${arr[2]}", ${arr[3]}, '${arr[4]}')`, (_err, result, field) => {
       cb(_err, result)
     })
   },
   updateItemModel: (arr, id, cb) => {
-    db.query(`UPDATE ${table} SET name="${arr[0]}", price= ${arr[1]}, description="${arr[2]}", category= ${arr[3]} WHERE id=${id}`, (_err, hasil, field) => {
+    db.query(`UPDATE ${table} SET name='${arr[0]}', price= ${arr[1]}, description='${arr[2]}', category= ${arr[3]} WHERE id=${id}`, (_err, hasil, field) => {
       cb(hasil)
     })
   },

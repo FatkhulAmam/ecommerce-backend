@@ -24,14 +24,16 @@ module.exports = {
   // membuat data dengan mesmaukkan name, price, dan description
   createItem: (req, res) => {
     const { name, price, description, category } = req.body
-    if (name && price && description && category) {
-      createItemModel([name, price, description, category], (err, result) => {
+    const pictures = `/uploads/${req.file.filename}`
+    if (name && price && description && category && pictures) {
+      createItemModel([name, price, description, category, pictures], (err, result) => {
         if (!err) {
           res.status(201).send({
             success: true,
             message: 'Item has been created',
             data: {
-              ...req.body
+              ...req.body,
+              pictures: ''
             }
           })
         } else {
@@ -72,7 +74,7 @@ module.exports = {
       searchValue = search || ''
     }
     if (!limit) {
-      limit = 5
+      limit = 8
     } else {
       limit = parseInt(limit)
     }
@@ -130,11 +132,11 @@ module.exports = {
   // merubah seluruh data pada index yang diminta
   updateItem: (req, res) => {
     const { id } = req.params
-    const { name, price, description, categoryName } = req.body
-    if (name.trim() && price.trim() && description.trim() && categoryName.trim()) {
+    const { name, price, description, category } = req.body
+    if (name.trim() && price.trim() && description.trim() && category.trim()) {
       getItemModel(id, result => {
         if (result.length) {
-          updateItemModel([name, price, description, categoryName], id, hasil => {
+          updateItemModel([name, price, description, category], id, hasil => {
             if (hasil.affectedRows) {
               res.status(200).send({
                 success: true,
