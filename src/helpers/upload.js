@@ -1,8 +1,6 @@
 const multer = require('multer')
 
-// const options = {
-//   dest: 'assets/uploads/'
-// }
+// const maxSize = 1 * 500 * 500
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {

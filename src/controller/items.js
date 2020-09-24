@@ -1,4 +1,5 @@
 const qs = require('querystring')
+const responseStandart = require('../helpers/response')
 
 const { getItemModel, createItemModel, getAllItemModel, searchItemModel, updateItemModel, updatePartialItemModel, deleItemModel } = require('../models/items')
 
@@ -8,16 +9,9 @@ module.exports = {
     const { id } = req.params
     getItemModel(id, result => {
       if (result.length) {
-        res.status(201).send({
-          succes: true,
-          message: 'showing...',
-          data: result[0]
-        })
+        return responseStandart(res, `item with id ${id}`, { data: result[0] })
       } else {
-        res.status(400).send({
-          succes: false,
-          message: 'bad request'
-        })
+        return responseStandart(res, 'bad request', {}, 400, false)
       }
     })
   },
@@ -37,18 +31,11 @@ module.exports = {
             }
           })
         } else {
-          console.log(err)
-          res.status(500).send({
-            success: false,
-            message: 'Internal Server error'
-          })
+          return responseStandart(res, 'data cannot be created', {}, 400, false)
         }
       })
     } else {
-      res.status(400).send({
-        success: false,
-        message: 'All field must be filled'
-      })
+      return responseStandart(res, 'All field must be filled', {}, 400, false)
     }
   },
   // menampilkan semua data pada halaman berdasarkan page yang dimasukkan dan limit yang diberikan
@@ -116,16 +103,10 @@ module.exports = {
             })
           })
         } else {
-          res.send({
-            success: 'false',
-            message: 'No item'
-          })
+          return (res, 'no item', {}, 400, false)
         }
       } else {
-        res.status(500).send({
-          success: 'false',
-          message: 'internal server error!'
-        })
+        return (res, 'Internal Server error', {}, 500, false)
       }
     })
   },
@@ -138,30 +119,17 @@ module.exports = {
         if (result.length) {
           updateItemModel([name, price, description, category], id, hasil => {
             if (hasil.affectedRows) {
-              res.status(200).send({
-                success: true,
-                message: `data updated on id ${id}`,
-                data: result
-              })
+              return (res, `data update on id ${id}`, { data: result }, 200)
             } else {
-              res.send({
-                success: false,
-                message: "no data can't update"
-              })
+              return (res, `data id ${id}, cannot be update`, {}, 400, false)
             }
           })
         } else {
-          res.send({
-            success: false,
-            message: 'items not found!!'
-          })
+          return (res, `data id ${id}, not found`, {}, 400, false)
         }
       })
     } else {
-      res.send({
-        success: false,
-        message: 'all froms must be filled!'
-      })
+      return (res, 'all field must be filled', {}, 400, false)
     }
   },
   // merubah sebagian data
@@ -176,23 +144,13 @@ module.exports = {
           })
           updatePartialItemModel(id, data, result => {
             if (result.affectedRows) {
-              res.send({
-                success: true,
-                message: `data id ${id} updated`,
-                data: req.body
-              })
+              return (res, `data id ${id} updated`, { data: req.body })
             } else {
-              res.send({
-                success: false,
-                message: ' data can`t be update!!!'
-              })
+              return (res, `data id ${id}, cannot be update`, {}, 400, false)
             }
           })
         } else {
-          res.send({
-            success: false,
-            message: 'no data be update!'
-          })
+          return (res, 'no data updated', {}, 400, false)
         }
       })
     }
@@ -204,22 +162,13 @@ module.exports = {
       if (result.length) {
         deleItemModel(id, result => {
           if (result.affectedRows) {
-            res.send({
-              succcess: true,
-              message: `id ${id} deleted!`
-            })
+            return (res, `data id ${id} deleted`, { data: result })
           } else {
-            res.send({
-              succes: false,
-              message: 'cannot delete data!!'
-            })
+            return (res, 'cannot delete data', {}, 400, false)
           }
         })
       } else {
-        res.send({
-          success: false,
-          message: 'no data founded'
-        })
+        return (res, 'no data founded', {}, 400, false)
       }
     })
   }

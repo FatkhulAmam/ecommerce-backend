@@ -30,7 +30,7 @@ module.exports = {
   },
   getAllItemModel: (arr, sort, num, cb) => {
     db.query(`
-    SELECT ${table}.id, ${table1}.category_name, ${table}.name, ${table}.price, ${table}.description, ${table}.input_date, ${table}.update_date 
+    SELECT ${table}.id, ${table1}.category_name, ${table}.name, ${table}.price, ${table}.description, ${table}.input_date, ${table}.update_date, ${table}.image_url 
     FROM ${table} INNER JOIN ${table1} ON ${table}.category = ${table1}.id
     WHERE ${arr[0]} 
     LIKE '%${arr[1]}%' 
