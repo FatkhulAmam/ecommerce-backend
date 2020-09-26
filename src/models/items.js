@@ -9,7 +9,8 @@ module.exports = {
     })
   },
   createItemModel: (arr, cb) => {
-    db.query(`INSERT INTO ${table} (name, price, description, category, image_url) VALUES ("${arr[0]}", ${arr[1]}, "${arr[2]}", ${arr[3]}, '${arr[4]}')`, (_err, result, field) => {
+    db.query(`INSERT INTO ${table} (name, price, description, category, image_url) 
+    VALUES ("${arr[0]}", ${arr[1]}, "${arr[2]}", ${arr[3]}, '${arr[4]}')`, (_err, result, field) => {
       cb(_err, result)
     })
   },

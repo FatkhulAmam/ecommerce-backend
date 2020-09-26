@@ -30,6 +30,7 @@ module.exports = {
   getProfile: (req, res) => {
     const { id } = req.params
     getProfileModel(id, result => {
+      console.log(result[0].email)
       if (result.length) {
         res.status(201).send({
           succes: true,

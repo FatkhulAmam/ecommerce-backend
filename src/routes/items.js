@@ -9,13 +9,13 @@ const {
 } = require('../controller/items')
 
 const uploadHelper = require('../helpers/upload')
-const validation = require('../helpers/validationImg')
+const validationImage = require('../helpers/validationImg')
 
 const router = Router()
 
 router.get('/', getItem)
 router.get('/:id', getDetailItem)
-router.post('/', uploadHelper.single('pictures'), validation, createItem)
+router.post('/', uploadHelper.single('pictures'), validationImage, createItem)
 router.put('/:id', updateItem)
 router.patch('/:id', updateItemPartial)
 router.delete('/:id', deleteItem)

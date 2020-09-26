@@ -18,6 +18,7 @@ module.exports = {
   // membuat data dengan mesmaukkan name, price, dan description
   createItem: (req, res) => {
     const { name, price, description, category } = req.body
+    console.log(req.file)
     const pictures = `/uploads/${req.file.filename}`
     if (name && price && description && category && pictures) {
       createItemModel([name, price, description, category, pictures], (err, result) => {
@@ -72,6 +73,7 @@ module.exports = {
     }
     const offset = (page - 1) * limit
     getAllItemModel([searchKey, searchValue], [sortBy, sortFrom], [limit, offset], (err, result) => {
+      console.log(result[0].name)
       if (!err) {
         const pageInfo = {
           count: 0,
@@ -90,10 +92,10 @@ module.exports = {
             const { pages, currentPage } = pageInfo
 
             if (currentPage < pages) {
-              pageInfo.nextLink = `http://localhost:8180/items?${qs.stringify({ ...req.query, ...{ page: page + 1 } })}`
+              pageInfo.nextLink = `${process.env.APP_URL}items?${qs.stringify({ ...req.query, ...{ page: page + 1 } })}`
             }
             if (currentPage > 1) {
-              pageInfo.prevLink = `http://localhost:8180/items?${qs.stringify({ ...req.query, ...{ page: page - 1 } })}`
+              pageInfo.prevLink = `${process.env.APP_URL}items?${qs.stringify({ ...req.query, ...{ page: page - 1 } })}`
             }
             res.send({
               success: true,
@@ -118,8 +120,9 @@ module.exports = {
       getItemModel(id, result => {
         if (result.length) {
           updateItemModel([name, price, description, category], id, hasil => {
+            console.log(hasil)
             if (hasil.affectedRows) {
-              return (res, `data update on id ${id}`, { data: result }, 200)
+              return (res, `data update on id ${id}`, { data: result })
             } else {
               return (res, `data id ${id}, cannot be update`, {}, 400, false)
             }
