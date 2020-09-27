@@ -1,7 +1,7 @@
 const db = require('../helpers/db')
 const table1 = 'cart'
 const table2 = 'user'
-const table3 = 'items'
+const table3 = 'product'
 
 module.exports = {
   createCartModel: (arr, cb) => {

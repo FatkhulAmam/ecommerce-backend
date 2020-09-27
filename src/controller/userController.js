@@ -1,9 +1,9 @@
 // const jwt = require('jsonwebtoken')
-const bcrypt = require('bcryptjs')
 const userModel = require('../models/userModel')
-const responseStandar = require('../helpers/response')
 const paging = require('../helpers/pagination')
+const responseStandar = require('../helpers/response')
 const joi = require('joi')
+const bcrypt = require('bcryptjs')
 
 module.exports = {
   read: async (req, res) => {
@@ -14,7 +14,7 @@ module.exports = {
     const result = await userModel.readUser([limit, offset])
     return responseStandar(res, 'List User', { result, pageInfo })
   },
-  cread: async (req, res) => {
+  creat: async (req, res) => {
     const schema = joi.object({
       roles_id: joi.string().required(),
       email: joi.string().required(),
@@ -30,10 +30,10 @@ module.exports = {
         return responseStandar(res, 'email alreade used', {}, 401, false)
       } else {
         const salt = await bcrypt.genSalt(10)
-        const hashedPass = await bcrypt.hash(result.password, salt)
+        const hashedPassword = await bcrypt.hash(result.password, salt)
         result = {
           ...result,
-          password: hashedPass
+          password: hashedPassword
         }
         const data = await userModel.createUser(result)
         if (data.affectedRows) {
@@ -49,22 +49,4 @@ module.exports = {
       }
     }
   }
-  // loginController: (req, res) => {
-  //   const { email, password } = req.body
-  //   getOtentifikasi(result => {
-  //     if (result) {
-  //       result.find(o => {
-  //         if (email === o.email && password === o.password) {
-  //           jwt.sign({ id: result.id }, process.env.APP_KEY, (_err, token) => {
-  //             return responseStandar(res, `token : ${token}`)
-  //           })
-  //         } else {
-  //           return responseStandar(res, 'wrong email or password', {}, 400, false)
-  //         }
-  //       })
-  //     } else {
-  //       return responseStandar(res, 'enter the email and password', {}, 400, false)
-  //     }
-  //   })
-  // }
 }

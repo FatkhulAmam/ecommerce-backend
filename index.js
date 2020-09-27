@@ -9,20 +9,24 @@ app.use(cors({ credentials: true }))
 app.use(bodyParser.urlencoded({ extended: false }))
 
 // import route
-const routerItems = require('./src/routes/items')
+const routerProduct = require('./src/routes/product')
 const routerCategory = require('./src/routes/category')
 const routerUser = require('./src/routes/userDetails')
+const routerAuth = require('./src/routes/authRoute')
 const routerCart = require('./src/routes/cart')
+const routerRole = require('./src/routes/rolesRoute')
 
 const manageUser = require('./src/routes/manageUser')
 // import middleware
 const authMiddleware = require('./src/middlewares/auth')
 
-app.use('/items', routerItems)
+app.use('/product', routerProduct)
 app.use('/category', routerCategory)
 app.use('/cart', routerCart)
-app.use('/user', authMiddleware, routerUser)
-app.use('/manage/user', manageUser)
+app.use('/user', routerUser)
+app.use('/login', routerAuth)
+app.use('/roles', routerRole)
+app.use('/manage/user', authMiddleware, manageUser)
 
 // provide static file(images)
 app.use('/uploads', express.static('assets/uploads'))

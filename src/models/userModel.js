@@ -24,7 +24,7 @@ module.exports = {
       })
     })
   },
-  getUserByCondition: (data) => {
+  getUserByCondition: (data = {}) => {
     return new Promise((resolve, reject) => {
       db.query(`SELECT * FROM ${table} WHERE ?`, data, (err, result, fields) => {
         if (err) {
@@ -35,6 +35,17 @@ module.exports = {
       })
     })
   },
+  // getOtentifikasi: (data) => {
+  //   return new Promise((resolve, reject) => {
+  //     db.query(`SELECT id, roles_id, email, password FROM ${table}`, data, (err, result, field) => {
+  //       if (err) {
+  //         reject(err)
+  //       } else {
+  //         resolve(result)
+  //       }
+  //     })
+  //   })
+  // },
   createUser: (data = {}) => {
     return new Promise((resolve, reject) => {
       db.query(`INSERT INTO ${table} SET ?`, data, (err, result, field) => {

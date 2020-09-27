@@ -1,5 +1,5 @@
 const db = require('../helpers/db')
-const table = 'items'
+const table = 'product'
 const table1 = 'category'
 
 module.exports = {

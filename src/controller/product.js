@@ -1,7 +1,7 @@
 const qs = require('querystring')
 const responseStandart = require('../helpers/response')
 
-const { getItemModel, createItemModel, getAllItemModel, searchItemModel, updateItemModel, updatePartialItemModel, deleItemModel } = require('../models/items')
+const { getItemModel, createItemModel, getAllItemModel, searchItemModel, updateItemModel, updatePartialItemModel, deleItemModel } = require('../models/product')
 
 module.exports = {
   // menampilkan data berdasarkan id yang dimasukkan
