@@ -1,4 +1,4 @@
-const { createUserModel, getProfileModel, updateProfileModel, updatePartProfileModel, deleteProfileModel } = require('../models/user')
+const { createUserModel, getProfileModel, updateProfileModel, updatePartProfileModel, deleteProfileModel } = require('../models/user_detail')
 
 module.exports = {
   createProfile: (req, res) => {

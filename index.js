@@ -11,18 +11,18 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // import route
 const routerItems = require('./src/routes/items')
 const routerCategory = require('./src/routes/category')
-const routerUser = require('./src/routes/user')
-const routerAuth = require('./src/routes/auth')
+const routerUser = require('./src/routes/userDetails')
 const routerCart = require('./src/routes/cart')
 
+const manageUser = require('./src/routes/manageUser')
 // import middleware
 const authMiddleware = require('./src/middlewares/auth')
 
 app.use('/items', routerItems)
 app.use('/category', routerCategory)
 app.use('/cart', routerCart)
-app.use('/user', routerUser)
-app.use('/auth', routerAuth)
+app.use('/user', authMiddleware, routerUser)
+app.use('/manage/user', manageUser)
 
 // provide static file(images)
 app.use('/uploads', express.static('assets/uploads'))

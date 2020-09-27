@@ -1,5 +1,5 @@
 const db = require('../helpers/db')
-const table = 'user'
+const table = 'user_detail'
 
 module.exports = {
   createUserModel: (arr, cb) => {
@@ -7,11 +7,11 @@ module.exports = {
       cb(err, result)
     })
   },
-  getProfileModel: (id, cb) => {
-    db.query(`SELECT * FROM ${table} WHERE id= ${id}`, (_err, result, field) => {
-      cb(result)
-    })
-  },
+  // getProfileModel: (id, cb) => {
+  //   db.query(`SELECT * FROM ${table} WHERE id= ${id}`, (_err, result, field) => {
+  //     cb(result)
+  //   })
+  // },
   getOtentifikasi: (cb) => {
     db.query(`SELECT id, email, password FROM ${table}`, (_err, result, field) => {
       cb(result)
