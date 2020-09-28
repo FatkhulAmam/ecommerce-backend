@@ -2,15 +2,17 @@ const { createUserModel, getProfileModel, updateProfileModel, updatePartProfileM
 
 module.exports = {
   createProfile: (req, res) => {
-    const { userName, email, password } = req.body
-    if (userName && email && password) {
-      createUserModel([userName, email, password], (err, result) => {
+    const { id, userName, phone } = req.body
+    const pictures = `/uploads/${req.file.filename}`
+    if (id && userName && phone && pictures) {
+      createUserModel([id, userName, phone, pictures], (err, result) => {
         if (!err) {
           res.send({
             success: true,
             message: 'profile created',
             data: {
-              ...req.body
+              ...req.body,
+              pictures
             }
           })
         } else {

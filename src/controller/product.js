@@ -18,17 +18,14 @@ module.exports = {
   // membuat data dengan mesmaukkan name, price, dan description
   createItem: (req, res) => {
     const { name, price, description, category } = req.body
-    console.log(req.file)
-    const pictures = `/uploads/${req.file.filename}`
-    if (name && price && description && category && pictures) {
-      createItemModel([name, price, description, category, pictures], (err, result) => {
+    if (name && price && description && category) {
+      createItemModel([name, price, description, category], (err, result) => {
         if (!err) {
           res.status(201).send({
             success: true,
             message: 'Item has been created',
             data: {
-              ...req.body,
-              pictures: ''
+              ...req.body
             }
           })
         } else {

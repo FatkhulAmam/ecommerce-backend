@@ -3,7 +3,7 @@ const table = 'user_detail'
 
 module.exports = {
   createUserModel: (arr, cb) => {
-    db.query(`INSERT INTO ${table} (user_name, email, password) VALUES ('${arr[0]}', '${arr[1]}', '${arr[2]}')`, (err, result, field) => {
+    db.query(`INSERT INTO ${table} (user_id, user_name, phone, photo) VALUES ('${arr[0]}', '${arr[1]}', '${arr[2]}', '${arr[3]}')`, (err, result, field) => {
       cb(err, result)
     })
   },

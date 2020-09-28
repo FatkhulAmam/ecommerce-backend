@@ -8,16 +8,25 @@ const {
   deleteItem
 } = require('../controller/product')
 
-const uploadHelper = require('../helpers/upload')
-const validationImage = require('../helpers/validationImg')
+// middleware
+const { adminMiddleware, sellerMiddleware } = require('../middlewares/auth')
 
 const router = Router()
 
 router.get('/', getItem)
 router.get('/:id', getDetailItem)
-router.post('/', uploadHelper.array('pictures', 5), validationImage, createItem)
-router.put('/:id', updateItem)
-router.patch('/:id', updateItemPartial)
-router.delete('/:id', deleteItem)
+
+// manage product as a loged user
+router.post('/', adminMiddleware, /* uploadHelper.array('pictures', 5), validationImage */ createItem)
+router.post('/', sellerMiddleware, /* uploadHelper.array('pictures', 5), validationImage */ createItem)
+
+router.put('/:id', adminMiddleware, updateItem)
+router.put('/:id', sellerMiddleware, updateItem)
+
+router.patch('/:id', adminMiddleware, updateItemPartial)
+router.patch('/:id', sellerMiddleware, updateItemPartial)
+
+router.delete('/:id', adminMiddleware, deleteItem)
+router.delete('/:id', sellerMiddleware, deleteItem)
 
 module.exports = router

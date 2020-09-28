@@ -9,8 +9,8 @@ module.exports = {
     })
   },
   createItemModel: (arr, cb) => {
-    db.query(`INSERT INTO ${table} (name, price, description, category, image_url) 
-    VALUES ("${arr[0]}", ${arr[1]}, "${arr[2]}", ${arr[3]}, '${arr[4]}')`, (_err, result, field) => {
+    db.query(`INSERT INTO ${table} (name, price, description, category) 
+    VALUES ("${arr[0]}", ${arr[1]}, "${arr[2]}", ${arr[3]})`, (_err, result, field) => {
       cb(_err, result)
     })
   },
@@ -31,7 +31,7 @@ module.exports = {
   },
   getAllItemModel: (arr, sort, num, cb) => {
     db.query(`
-    SELECT ${table}.id, ${table1}.category_name, ${table}.name, ${table}.price, ${table}.description, ${table}.input_date, ${table}.update_date, ${table}.image_url 
+    SELECT ${table}.id, ${table1}.category_name, ${table}.name, ${table}.price, ${table}.description, ${table}.input_date, ${table}.update_date
     FROM ${table} INNER JOIN ${table1} ON ${table}.category = ${table1}.id
     WHERE ${arr[0]} 
     LIKE '%${arr[1]}%' 

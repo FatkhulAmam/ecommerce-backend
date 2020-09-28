@@ -3,7 +3,10 @@ const { createProfile, getProfile, updateProfile, updatePartProfile, deleteProfi
 
 const router = Router()
 
-router.post('/', createProfile)
+const uploadHelper = require('../helpers/upload')
+const validationImage = require('../helpers/validationImg')
+
+router.post('/', uploadHelper.single('pictures'), validationImage, createProfile)
 router.get('/:id', getProfile)
 router.delete('/:id', deleteProfile)
 router.put('/:id', updateProfile)

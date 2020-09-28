@@ -18,15 +18,20 @@ const routerRole = require('./src/routes/rolesRoute')
 
 const manageUser = require('./src/routes/manageUser')
 // import middleware
-const authMiddleware = require('./src/middlewares/auth')
+const { adminMiddleware, sellerMiddleware, custommerMiddleware } = require('./src/middlewares/auth')
 
 app.use('/product', routerProduct)
 app.use('/category', routerCategory)
-app.use('/cart', routerCart)
+
+// cart login user
+app.use('/cart', adminMiddleware, routerCart)
+app.use('/cart', sellerMiddleware, routerCart)
+app.use('/cart', custommerMiddleware, routerCart)
+
 app.use('/user', routerUser)
 app.use('/login', routerAuth)
-app.use('/roles', routerRole)
-app.use('/manage/user', authMiddleware, manageUser)
+app.use('/roles', adminMiddleware, routerRole)
+app.use('/manage/user', manageUser)
 
 // provide static file(images)
 app.use('/uploads', express.static('assets/uploads'))

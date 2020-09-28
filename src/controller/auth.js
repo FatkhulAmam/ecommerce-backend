@@ -19,7 +19,7 @@ module.exports = {
       //   console.log(compared)
       if (roleId === 1) {
         if (compared === true) {
-          jwt.sign({ id: id }, process.env.APP_KEY, (err, token) => {
+          jwt.sign({ id: id }, process.env.ADMIN_APP_KEY, (err, token) => {
             if (err) {
               return responseStandar(res, 'Error', { error: err.message }, 500, false)
             } else {
@@ -47,7 +47,7 @@ module.exports = {
       console.log(compared)
       if (roleId === 2) {
         if (compared === true) {
-          jwt.sign({ id: id }, process.env.APP_KEY, (err, token) => {
+          jwt.sign({ id: id }, process.env.SELLER_APP_KEY, (err, token) => {
             if (err) {
               return responseStandar(res, 'Error', { error: err.message }, 500, false)
             } else {
@@ -74,7 +74,7 @@ module.exports = {
       const compared = await bcrypt.compare(password, hashed)
       if (roleId === 3) {
         if (compared === true) {
-          jwt.sign({ id: id }, process.env.APP_KEY, (err, token) => {
+          jwt.sign({ id: id }, process.env.CUSTOMMER_APP_KEY, (err, token) => {
             if (err) {
               return responseStandar(res, 'Error', { error: err.message }, 500, false)
             } else {
