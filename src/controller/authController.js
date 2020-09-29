@@ -15,7 +15,7 @@ module.exports = {
             if (err) {
               return responseStandar(res, 'Error', { error: err.message }, 500, false)
             } else {
-              return responseStandar(res, 'Login as admin successfuly', { token })
+              return responseStandar(res, `Hello Admin ${data[0].id}`, { token })
             }
           })
         } else {
@@ -33,14 +33,13 @@ module.exports = {
     const data = await getUserByCondition([{ email }])
     const compared = await bcrypt.compare(password, data[0].password)
     if (data.length) {
-      console.log(compared)
       if (data[0].roles_id === 2) {
         if (compared === true) {
           jwt.sign({ id: data[0].id }, process.env.SELLER_APP_KEY, (err, token) => {
             if (err) {
               return responseStandar(res, 'Error', { error: err.message }, 500, false)
             } else {
-              return responseStandar(res, 'Login as seller successfuly', { token })
+              return responseStandar(res, 'lets sell anything seller', { token })
             }
           })
         } else {
@@ -64,7 +63,7 @@ module.exports = {
             if (err) {
               return responseStandar(res, 'Error', { error: err.message }, 500, false)
             } else {
-              return responseStandar(res, 'Login as customer successfuly', { token })
+              return responseStandar(res, 'buy anythink do you want', { token })
             }
           })
         } else {

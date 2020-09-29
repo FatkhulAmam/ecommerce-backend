@@ -1,5 +1,8 @@
 const { qs } = require('querystring')
-const { createCartModel, getCartModel, searchCartModel, getCartUserModel, getCartDelModel, deleteItemModel } = require('../models/cart')
+const {
+  createCartModel, getCartModel, searchCartModel, getCartUserModel, getCartDelModel, deleteItemModel
+} = require('../models/cartModel')
+const responseStandart = require('../helpers/response')
 
 module.exports = {
   createCart: (req, res) => {
@@ -7,22 +10,13 @@ module.exports = {
     if (userId && itemsId) {
       createCartModel([userId, itemsId], (err, result) => {
         if (!err) {
-          res.send({
-            success: true,
-            message: `user with id ${userId} enter`
-          })
+          return responseStandart(res, `user with id ${userId} enter`, { result })
         } else {
-          res.send({
-            success: false,
-            message: `no user on id ${userId}`
-          })
+          return responseStandart(res, `no user on id ${userId}`, {}, 401, false)
         }
       })
     } else {
-      res.send({
-        success: false,
-        message: ' all filed must be filled'
-      })
+      return responseStandart(res, 'all filed must be filled', {}, 401, false)
     }
   },
   getCart: (req, res) => {
@@ -80,24 +74,13 @@ module.exports = {
             if (currentPage > 1) {
               pageInfo.prevLink = `http://localhost:8180/cart?${qs.stringify({ ...req.query, ...{ page: page - 1 } })}`
             }
-            res.send({
-              success: true,
-              message: 'List Items',
-              data: result,
-              pageInfo
-            })
+            return responseStandart(res, 'item list', { data: result, pageInfo })
           })
         } else {
-          res.send({
-            success: 'false',
-            message: 'No item'
-          })
+          return responseStandart(res, 'no item', {}, 401, false)
         }
       } else {
-        res.status(500).send({
-          success: 'false',
-          message: 'internal server error!'
-        })
+        return responseStandart(res, 'internal server error', {}, 500, false)
       }
     })
   },

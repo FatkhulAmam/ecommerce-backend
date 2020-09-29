@@ -1,5 +1,5 @@
 const qs = require('querystring')
-const { getAllCategoryModel, searchCategoryModel, createCategoryModel, getCategoryModel, deleteCategoryModel } = require('../models/category')
+const { getAllCategoryModel, searchCategoryModel, createCategoryModel, getCategoryModel, deleteCategoryModel } = require('../models/categoryModel')
 
 module.exports = {
   createCategory: (req, res) => {

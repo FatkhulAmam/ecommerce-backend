@@ -1,5 +1,6 @@
 const db = require('../helpers/db')
 const table = 'product'
+// const tableImage = 'product_image'
 const table1 = 'category'
 
 module.exports = {

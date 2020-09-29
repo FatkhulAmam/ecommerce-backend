@@ -1,7 +1,8 @@
 const qs = require('querystring')
 const responseStandart = require('../helpers/response')
-
-const { getItemModel, createItemModel, getAllItemModel, searchItemModel, updateItemModel, updatePartialItemModel, deleItemModel } = require('../models/product')
+const {
+  getItemModel, createItemModel, getAllItemModel, searchItemModel, updateItemModel, updatePartialItemModel, deleItemModel
+} = require('../models/productModel')
 
 module.exports = {
   // menampilkan data berdasarkan id yang dimasukkan
@@ -18,16 +19,12 @@ module.exports = {
   // membuat data dengan mesmaukkan name, price, dan description
   createItem: (req, res) => {
     const { name, price, description, category } = req.body
+    const pictures = `/uploads/${req.file.filename}`
+    console.log(pictures)
     if (name && price && description && category) {
       createItemModel([name, price, description, category], (err, result) => {
         if (!err) {
-          res.status(201).send({
-            success: true,
-            message: 'Item has been created',
-            data: {
-              ...req.body
-            }
-          })
+          return responseStandart(res, 'Item has been created', { data: { ...req.body } })
         } else {
           return responseStandart(res, 'data cannot be created', {}, 400, false)
         }
@@ -94,12 +91,7 @@ module.exports = {
             if (currentPage > 1) {
               pageInfo.prevLink = `${process.env.APP_URL}items?${qs.stringify({ ...req.query, ...{ page: page - 1 } })}`
             }
-            res.send({
-              success: true,
-              message: 'List Items',
-              data: result,
-              pageInfo
-            })
+            return responseStandart(res, 'list item', { data: result, pageInfo })
           })
         } else {
           return (res, 'no item', {}, 400, false)
@@ -117,19 +109,18 @@ module.exports = {
       getItemModel(id, result => {
         if (result.length) {
           updateItemModel([name, price, description, category], id, hasil => {
-            console.log(hasil)
             if (hasil.affectedRows) {
-              return (res, `data update on id ${id}`, { data: result })
+              return responseStandart(res, `data update on id ${id}`, { data: result })
             } else {
-              return (res, `data id ${id}, cannot be update`, {}, 400, false)
+              return responseStandart(res, `data id ${id}, cannot be update`, {}, 400, false)
             }
           })
         } else {
-          return (res, `data id ${id}, not found`, {}, 400, false)
+          return responseStandart(res, `data id ${id}, not found`, {}, 400, false)
         }
       })
     } else {
-      return (res, 'all field must be filled', {}, 400, false)
+      return responseStandart(res, 'all field must be filled', {}, 400, false)
     }
   },
   // merubah sebagian data
@@ -144,15 +135,17 @@ module.exports = {
           })
           updatePartialItemModel(id, data, result => {
             if (result.affectedRows) {
-              return (res, `data id ${id} updated`, { data: req.body })
+              return responseStandart(res, `data id ${id} updated`, { data: req.body })
             } else {
-              return (res, `data id ${id}, cannot be update`, {}, 400, false)
+              return responseStandart(res, `data id ${id}, cannot be update`, {}, 400, false)
             }
           })
         } else {
-          return (res, 'no data updated', {}, 400, false)
+          return responseStandart(res, 'no data updated', {}, 400, false)
         }
       })
+    } else {
+      return responseStandart(res, 'cannot edit data', {}, 401, false)
     }
   },
   // menghapus data berdasarkan index

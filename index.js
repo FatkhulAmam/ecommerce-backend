@@ -9,14 +9,14 @@ app.use(cors({ credentials: true }))
 app.use(bodyParser.urlencoded({ extended: false }))
 
 // import route
-const routerProduct = require('./src/routes/product')
-const routerCategory = require('./src/routes/category')
-const routerUser = require('./src/routes/userDetails')
+const routerProduct = require('./src/routes/productRoute')
+const routerCategory = require('./src/routes/categoryRoute')
+const routerUser = require('./src/routes/userDetailsRoute')
 const routerAuth = require('./src/routes/authRoute')
-const routerCart = require('./src/routes/cart')
+const routerCart = require('./src/routes/cartRoute')
 const routerRole = require('./src/routes/rolesRoute')
 
-const manageUser = require('./src/routes/manageUser')
+const manageUser = require('./src/routes/UserRoute')
 // import middleware
 const { adminMiddleware, sellerMiddleware, custommerMiddleware } = require('./src/middlewares/auth')
 

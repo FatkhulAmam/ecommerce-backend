@@ -1,11 +1,12 @@
-const { createUserModel, getProfileModel, updateProfileModel, updatePartProfileModel, deleteProfileModel } = require('../models/user_detail')
+const { createUserModel, getProfileModel, updateProfileModel, updatePartProfileModel, deleteProfileModel } = require('../models/userDetailModel')
 
 module.exports = {
   createProfile: (req, res) => {
-    const { id, userName, phone } = req.body
+    const { idUser, userName, phone } = req.body
     const pictures = `/uploads/${req.file.filename}`
-    if (id && userName && phone && pictures) {
-      createUserModel([id, userName, phone, pictures], (err, result) => {
+    console.log(idUser)
+    if (idUser.trim() && userName.trim() && phone && pictures) {
+      createUserModel([idUser, userName, phone, pictures], (err, result) => {
         if (!err) {
           res.send({
             success: true,
@@ -32,7 +33,6 @@ module.exports = {
   getProfile: (req, res) => {
     const { id } = req.params
     getProfileModel(id, result => {
-      console.log(result[0].email)
       if (result.length) {
         res.status(201).send({
           succes: true,
@@ -49,11 +49,12 @@ module.exports = {
   },
   updateProfile: (req, res) => {
     const { id } = req.params
-    const { userName, email, password } = req.body
-    if (userName.trim() && email.trim() && password.trim()) {
+    const { idUser, userName, phone } = req.body
+    const pictures = `/uploads/${req.file.filename}`
+    if (idUser.trim() && userName.trim() && phone.trim() && pictures) {
       getProfileModel(id, result => {
         if (result.length) {
-          updateProfileModel([userName, email, password], id, hasil => {
+          updateProfileModel([idUser, userName, phone, pictures], id, hasil => {
             if (hasil.affectedRows) {
               res.status(200).send({
                 success: true,
@@ -83,14 +84,16 @@ module.exports = {
   },
   updatePartProfile: (req, res) => {
     const { id } = req.params
-    const { userName = '', email = '', password = '' } = req.body
-    if (userName.trim() || email.trim() || password.trim()) {
+    const { idUser = '', userName = '', phone = '' } = req.body
+    const pictures = `/uploads/${req.file.filename}`
+    if (idUser.trim() || userName.trim() || phone || pictures) {
       getProfileModel(id, result => {
         if (result.length) {
           const data = Object.entries(req.body).map(item => {
             return parseInt(item[1]) > 0 ? `${item[0]}=${item[1]}` : `${item[0]}='${item[1]}'`
           })
           updatePartProfileModel(id, data, result => {
+            console.log(data)
             if (result.affectedRows) {
               res.send({
                 success: true,
@@ -110,6 +113,11 @@ module.exports = {
             message: 'no data be update!'
           })
         }
+      })
+    } else {
+      res.send({
+        success: false,
+        message: 'fill a field'
       })
     }
   },

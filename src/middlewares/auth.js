@@ -4,7 +4,6 @@ const responseStandart = require('../helpers/response')
 module.exports = {
   adminMiddleware: (req, res, next) => {
     const { authorization } = req.headers
-    console.log(authorization)
     if (authorization && authorization.startsWith('Bearer ')) {
       const token = authorization.slice(7, authorization.length)
       try {

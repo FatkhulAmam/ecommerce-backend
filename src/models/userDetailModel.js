@@ -18,7 +18,7 @@ module.exports = {
   //   })
   // },
   updateProfileModel: (arr, id, cb) => {
-    db.query(`UPDATE ${table} SET user_name="${arr[0]}", email= '${arr[1]}', password="${arr[2]}" WHERE id=${id}`, (_err, hasil, field) => {
+    db.query(`UPDATE ${table} SET user_id='${arr[0]}', user_name= '${arr[1]}', phone='${arr[2]}', photo='${arr[3]}' WHERE id=${id}`, (_err, hasil, field) => {
       cb(hasil)
     })
   },
