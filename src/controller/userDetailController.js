@@ -1,3 +1,4 @@
+const responseStandar = require('../helpers/response')
 const { createUserModel, getProfileModel, updateProfileModel, updatePartProfileModel, deleteProfileModel } = require('../models/userDetailModel')
 
 module.exports = {
@@ -8,42 +9,22 @@ module.exports = {
     if (idUser.trim() && userName.trim() && phone && pictures) {
       createUserModel([idUser, userName, phone, pictures], (err, result) => {
         if (!err) {
-          res.send({
-            success: true,
-            message: 'profile created',
-            data: {
-              ...req.body,
-              pictures
-            }
-          })
+          return responseStandar(res, 'profile created', { data: { ...req.body, pictures } })
         } else {
-          res.send({
-            success: false,
-            message: 'cannot create profile'
-          })
+          return responseStandar(res, 'cannot create profile', {}, 401, false)
         }
       })
     } else {
-      res.send({
-        success: false,
-        message: 'all field must be filled'
-      })
+      return responseStandar(res, 'all field must be filled', {}, 401, false)
     }
   },
   getProfile: (req, res) => {
     const { id } = req.params
     getProfileModel(id, result => {
       if (result.length) {
-        res.status(201).send({
-          succes: true,
-          message: 'showing profile...',
-          data: result[0]
-        })
+        return responseStandar(res, 'showing profile', { data: result[0] })
       } else {
-        res.status(400).send({
-          succes: false,
-          message: 'bad request'
-        })
+        return responseStandar(res, 'bad request', {}, 400, false)
       }
     })
   },
@@ -56,30 +37,17 @@ module.exports = {
         if (result.length) {
           updateProfileModel([idUser, userName, phone, pictures], id, hasil => {
             if (hasil.affectedRows) {
-              res.status(200).send({
-                success: true,
-                message: `data updated on id ${id}`,
-                data: result
-              })
+              return responseStandar(res, `data updated on id ${id}`, { data: result })
             } else {
-              res.send({
-                success: false,
-                message: "no data can't update"
-              })
+              return responseStandar(res, 'no data canot update', {}, 401, false)
             }
           })
         } else {
-          res.send({
-            success: false,
-            message: 'items not found!!'
-          })
+          return responseStandar(res, 'items not found!!', {}, 401, false)
         }
       })
     } else {
-      res.send({
-        success: false,
-        message: 'all froms must be filled!'
-      })
+      return responseStandar(res, 'all from must be filled', {}, 401, false)
     }
   },
   updatePartProfile: (req, res) => {
@@ -95,30 +63,17 @@ module.exports = {
           updatePartProfileModel(id, data, result => {
             console.log(data)
             if (result.affectedRows) {
-              res.send({
-                success: true,
-                message: `profile id ${id} updated`,
-                data: req.body
-              })
+              return responseStandar(res, `profile id ${id} updated`, { data: req.body })
             } else {
-              res.send({
-                success: false,
-                message: ' data can`t be update!!!'
-              })
+              return responseStandar(res, 'data cannot updated', {}, 401, false)
             }
           })
         } else {
-          res.send({
-            success: false,
-            message: 'no data be update!'
-          })
+          return responseStandar(res, 'no data be updated', {}, 401, false)
         }
       })
     } else {
-      res.send({
-        success: false,
-        message: 'fill a field'
-      })
+      return responseStandar(res, 'fill a field', {}, 401, false)
     }
   },
   deleteProfile: (req, res) => {
@@ -127,22 +82,13 @@ module.exports = {
       if (result.length) {
         deleteProfileModel(id, result => {
           if (result.affectedRows) {
-            res.send({
-              success: true,
-              message: 'Profile Deleted'
-            })
+            return responseStandar(res, 'profile deleted', {})
           } else {
-            res.send({
-              success: false,
-              message: 'cannot delete Pofie'
-            })
+            return responseStandar(res, 'cannot dalete profile', {}, 401, false)
           }
         })
       } else {
-        res.send({
-          success: false,
-          message: 'cannot delete item'
-        })
+        return responseStandar(res, 'cannot dalete profile', {}, 401, false)
       }
     })
   }
