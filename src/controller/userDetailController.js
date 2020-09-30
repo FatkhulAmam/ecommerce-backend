@@ -1,7 +1,16 @@
 const responseStandar = require('../helpers/response')
-const { createUserModel, getProfileModel, updateProfileModel, updatePartProfileModel, deleteProfileModel } = require('../models/userDetailModel')
+const paging = require('../helpers/pagination')
+const { createUserModel, getProfileModel, updateProfileModel, updatePartProfileModel, deleteProfileModel, readUser, constUser } = require('../models/userDetailModel')
 
 module.exports = {
+  getProfile: async (req, res) => {
+    const count = await constUser()
+    const page = paging(req, count)
+    const { offset, pageInfo } = page
+    const { limitData: limit } = pageInfo
+    const result = await readUser([limit, offset])
+    return responseStandar(res, 'List all user detail', { result, pageInfo })
+  },
   createProfile: (req, res) => {
     const { idUser, userName, phone } = req.body
     const pictures = `/uploads/${req.file.filename}`
@@ -18,7 +27,7 @@ module.exports = {
       return responseStandar(res, 'all field must be filled', {}, 401, false)
     }
   },
-  getProfile: (req, res) => {
+  getProfileById: (req, res) => {
     const { id } = req.params
     getProfileModel(id, result => {
       if (result.length) {

@@ -4,7 +4,7 @@ const table = 'user'
 module.exports = {
   readUser: (data = []) => {
     return new Promise((resolve, reject) => {
-      db.query(`SELECT * FROM ${table} LIMIT ? OFFSET ?`, data, (err, results, fields) => {
+      db.query(`SELECT user_name, email FROM ${table} LIMIT ? OFFSET ?`, data, (err, results, fields) => {
         if (err) {
           reject(err)
         } else {
@@ -55,6 +55,16 @@ module.exports = {
           resolve(result)
         }
       })
+    })
+  },
+  getUserById: (id, cb) => {
+    db.query(`SELECT * FROM ${table} WHERE id=${id}`, (_err, result, fields) => {
+      cb(result)
+    })
+  },
+  updateUser: (arr, id, cb) => {
+    db.query(`UPDATE ${table} SET user_id='${arr[0]}', user_name= '${arr[1]}', phone='${arr[2]}', photo='${arr[3]}' WHERE id=${id}`, (_err, hasil, field) => {
+      cb(hasil)
     })
   }
 }
