@@ -11,7 +11,7 @@ module.exports = {
     if (data.length) {
       if (data[0].roles_id === 1) {
         if (compared === true) {
-          jwt.sign({ id: data[0].id }, process.env.ADMIN_APP_KEY, (err, token) => {
+          jwt.sign({ id: data[0].id }, process.env.APP_KEY, (err, token) => {
             if (err) {
               return responseStandar(res, 'Error', { error: err.message }, 500, false)
             } else {
@@ -35,7 +35,7 @@ module.exports = {
     if (data.length) {
       if (data[0].roles_id === 2) {
         if (compared === true) {
-          jwt.sign({ id: data[0].id }, process.env.SELLER_APP_KEY, (err, token) => {
+          jwt.sign({ id: data[0].id }, process.env.APP_KEY, (err, token) => {
             if (err) {
               return responseStandar(res, 'Error', { error: err.message }, 500, false)
             } else {
@@ -59,7 +59,7 @@ module.exports = {
     if (data.length) {
       if (data[0].roles_id === 3) {
         if (compared === true) {
-          jwt.sign({ id: data[0].id }, process.env.CUSTOMMER_APP_KEY, (err, token) => {
+          jwt.sign({ id: data[0].id }, process.env.APP_KEY, (err, token) => {
             if (err) {
               return responseStandar(res, 'Error', { error: err.message }, 500, false)
             } else {
