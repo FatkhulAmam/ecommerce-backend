@@ -16,17 +16,15 @@ const routerAuth = require('./src/routes/authRoute')
 const routerCart = require('./src/routes/cartRoute')
 const routerRole = require('./src/routes/rolesRoute')
 
-const manageUser = require('./src/routes/UserRoute')
 // import middleware
 const authMiddleware = require('./src/middlewares/auth')
 
 app.use('/product', routerProduct)
 app.use('/category', routerCategory)
 app.use('/cart', authMiddleware, routerCart)
-app.use('/user', routerUser)
+app.use('/user', authMiddleware, routerUser)
 app.use('/auth', routerAuth)
 app.use('/roles', authMiddleware, routerRole)
-app.use('/manage/user', manageUser)
 
 // provide static file(images)
 app.use('/uploads', express.static('assets/uploads'))

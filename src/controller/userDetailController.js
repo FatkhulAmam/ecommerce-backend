@@ -1,6 +1,12 @@
 const responseStandar = require('../helpers/response')
 const paging = require('../helpers/pagination')
-const { createUserModel, getProfileModel, updateProfileModel, updatePartProfileModel, deleteProfileModel, readUser, constUser } = require('../models/userDetailModel')
+const joi = require('joi')
+const bcrypt = require('bcryptjs')
+const {
+  getProfileModel, updateProfilModel,
+  updatePartProfileModel, deleteProfileModel, getUserByCondition, updateProfilDetailModel,
+  readUser, constUser, getUserByConditionDetail
+} = require('../models/userDetailModel')
 
 module.exports = {
   getProfile: async (req, res) => {
@@ -11,52 +17,87 @@ module.exports = {
     const result = await readUser([limit, offset])
     return responseStandar(res, 'List all user detail', { result, pageInfo })
   },
-  createProfile: (req, res) => {
-    const { idUser, userName, phone } = req.body
-    const pictures = `/uploads/${req.file.filename}`
-    console.log(idUser)
-    if (idUser.trim() && userName.trim() && phone && pictures) {
-      createUserModel([idUser, userName, phone, pictures], (err, result) => {
-        if (!err) {
-          return responseStandar(res, 'profile created', { data: { ...req.body, pictures } })
-        } else {
-          return responseStandar(res, 'cannot create profile', {}, 401, false)
+  getDetailUser: async (req, res) => {
+    const { id } = req.user
+
+    const results = await getProfileModel(id)
+    if (results.length) {
+      const data = results.map(data => {
+        data = {
+          ...data,
+          password: null
         }
+        return data
       })
+      responseStandar(res, `Detail of user id ${id}`, { data })
     } else {
-      return responseStandar(res, 'all field must be filled', {}, 401, false)
+      responseStandar(res, `User with id ${id} is not found`, {}, 404, false)
     }
   },
-  getProfileById: (req, res) => {
-    const { id } = req.params
-    getProfileModel(id, result => {
-      if (result.length) {
-        return responseStandar(res, 'showing profile', { data: result[0] })
-      } else {
-        return responseStandar(res, 'bad request', {}, 400, false)
-      }
+  updateProfile: async (req, res) => {
+    const picture = `/uploads/${req.file.filename}`
+    const schema = joi.object({
+      user_name: joi.string().required(),
+      email: joi.string().required(),
+      password: joi.string().required(),
+      phone: joi.string().required(),
+      gender: joi.string().required(),
+      birth: joi.string().required()
     })
-  },
-  updateProfile: (req, res) => {
-    const { id } = req.params
-    const { idUser, userName, phone } = req.body
-    const pictures = `/uploads/${req.file.filename}`
-    if (idUser.trim() && userName.trim() && phone.trim() && pictures) {
-      getProfileModel(id, result => {
-        if (result.length) {
-          updateProfileModel([idUser, userName, phone, pictures], id, hasil => {
-            if (hasil.affectedRows) {
-              return responseStandar(res, `data updated on id ${id}`, { data: result })
-            } else {
-              return responseStandar(res, 'no data canot update', {}, 401, false)
-            }
-          })
-        } else {
-          return responseStandar(res, 'items not found!!', {}, 401, false)
-        }
-      })
+    const { id } = req.user
+    const { value: results, error } = schema.validate(req.body)
+    if (error) {
+      return responseStandar(res, 'Error', { error: error.message }, 400, false)
     } else {
-      return responseStandar(res, 'all from must be filled', {}, 401, false)
+      const { name, email, password, phone, gender, birth } = results
+      const isExist = await getUserByCondition([{ email }])
+      console.log(isExist)
+      let existEmail = 0
+      if (isExist.length) {
+        existEmail = isExist[0].id
+      }
+      if (existEmail === parseInt(id) || !isExist.length) {
+        if (results === isExist[0]) {
+          return responseStandar(res, 'There is no change', {}, 304, false)
+        } else {
+          const isExist = await getUserByConditionDetail({ phone })
+          let existPhone = 0
+          if (isExist.length) {
+            existPhone = isExist[0].user_id
+          }
+          console.log(isExist, existPhone, id)
+          if (existPhone === parseInt(id) || !isExist.length) {
+            const salt = await bcrypt.genSalt(10)
+            const hashedPassword = await bcrypt.hash(password, salt)
+            const user = {
+              user_name: name,
+              email: email,
+              password: hashedPassword
+            }
+            const updateUser = await updateProfilModel([user, id])
+            if (updateUser.affectedRows) {
+              const detail = {
+                phone: phone,
+                gender: gender,
+                birth: birth,
+                photo: picture
+              }
+              const updateDetail = await updateProfilDetailModel([detail, id])
+              if (updateDetail.affectedRows) {
+                return responseStandar(res, 'Success! User has been updated!')
+              } else {
+                return responseStandar(res, 'Failed to update user!', {}, 400, false)
+              }
+            } else {
+              return responseStandar(res, 'Failed to update user!', {}, 400, false)
+            }
+          } else {
+            return responseStandar(res, 'Phone number has already used', {}, 400, false)
+          }
+        }
+      } else {
+        return responseStandar(res, 'Email has already used', {}, 400, false)
+      }
     }
   },
   updatePartProfile: (req, res) => {
