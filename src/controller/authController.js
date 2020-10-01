@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken')
 const responseStandar = require('../helpers/response')
-const { getUserByCondition } = require('../models/userModel')
+const { getUserByCondition, createUser } = require('../models/authModel')
+const joi = require('joi')
 const bcrypt = require('bcryptjs')
 
 module.exports = {
@@ -74,6 +75,102 @@ module.exports = {
       }
     } else {
       return responseStandar(res, 'Wrong email or password', {}, 400, false)
+    }
+  },
+  registerController: async (req, res) => {
+    switch (req.params.role) {
+      case 'admin': {
+        const schema = joi.object({
+          user_name: joi.string().required(),
+          email: joi.string().required(),
+          password: joi.string().required()
+        })
+        let { value: result, error } = schema.validate(req.body)
+        if (!error) {
+          const salt = bcrypt.genSaltSync(10)
+          const hashedPass = bcrypt.hashSync(result.password, salt)
+          const userData = {
+            user_name: result.user_name,
+            email: result.email,
+            password: hashedPass,
+            roles_id: 1
+          }
+          const createdUser = await createUser(userData)
+          if (createdUser.affectedRows) {
+            result = {
+              ...result,
+              password: undefined
+            }
+            return responseStandar(res, 'register Success', { result })
+          } else {
+            return responseStandar(res, 'register failed', {}, 401, false)
+          }
+        } else {
+          return responseStandar(res, 'error', {}, 401, false)
+        }
+      }
+      case 'seller': {
+        const schema = joi.object({
+          user_name: joi.string().required(),
+          email: joi.string().required(),
+          password: joi.string().required()
+        })
+        let { value: result, error } = schema.validate(req.body)
+        if (!error) {
+          const salt = bcrypt.genSaltSync(10)
+          const hashedPass = bcrypt.hashSync(result.password, salt)
+          const userData = {
+            user_name: result.user_name,
+            email: result.email,
+            password: hashedPass,
+            roles_id: 2
+          }
+          const createdUser = await createUser(userData)
+          if (createdUser.affectedRows) {
+            result = {
+              ...result,
+              password: undefined
+            }
+            return responseStandar(res, 'register Success', { result })
+          } else {
+            return responseStandar(res, 'register failed', {}, 401, false)
+          }
+        } else {
+          return responseStandar(res, 'error', {}, 401, false)
+        }
+      }
+      case 'custommer': {
+        const schema = joi.object({
+          user_name: joi.string().required(),
+          email: joi.string().required(),
+          password: joi.string().required()
+        })
+        let { value: result, error } = schema.validate(req.body)
+        if (!error) {
+          const salt = bcrypt.genSaltSync(10)
+          const hashedPass = bcrypt.hashSync(result.password, salt)
+          const userData = {
+            user_name: result.user_name,
+            email: result.email,
+            password: hashedPass,
+            roles_id: 3
+          }
+          const createdUser = await createUser(userData)
+          if (createdUser.affectedRows) {
+            result = {
+              ...result,
+              password: undefined
+            }
+            return responseStandar(res, 'register Success', { result })
+          } else {
+            return responseStandar(res, 'register failed', {}, 401, false)
+          }
+        } else {
+          return responseStandar(res, 'error', {}, 401, false)
+        }
+      }
+      default:
+        break
     }
   }
 }

@@ -1,8 +1,9 @@
 const route = require('express').Router()
-const { AdminLoginControl, SellerLoginController, CustommerLoginController } = require('../controller/authController')
+const { AdminLoginControl, SellerLoginController, CustommerLoginController, registerController } = require('../controller/authController')
 
-route.post('/admin', AdminLoginControl)
-route.post('/seller', SellerLoginController)
-route.post('/custommer', CustommerLoginController)
+route.post('/login/admin', AdminLoginControl)
+route.post('/login/seller', SellerLoginController)
+route.post('/login/custommer', CustommerLoginController)
+route.post('/register/:role', registerController)
 
 module.exports = route

@@ -24,7 +24,7 @@ app.use('/product', routerProduct)
 app.use('/category', routerCategory)
 app.use('/cart', authMiddleware, routerCart)
 app.use('/user', routerUser)
-app.use('/login', routerAuth)
+app.use('/auth', routerAuth)
 app.use('/roles', authMiddleware, routerRole)
 app.use('/manage/user', manageUser)
 
