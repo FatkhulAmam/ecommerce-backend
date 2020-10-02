@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 const responseStandar = require('../helpers/response')
-const { getUserByCondition, createUser } = require('../models/authModel')
+const { getUserByCondition, createUser, addPhoneNumber } = require('../models/authModel')
 const joi = require('joi')
 const bcrypt = require('bcryptjs')
 
@@ -113,6 +113,8 @@ module.exports = {
         const schema = joi.object({
           user_name: joi.string().required(),
           email: joi.string().required(),
+          store_name: joi.string().required(),
+          phone: joi.string().required(),
           password: joi.string().required()
         })
         let { value: result, error } = schema.validate(req.body)
@@ -122,11 +124,16 @@ module.exports = {
           const userData = {
             user_name: result.user_name,
             email: result.email,
+            store_name: result.store_name,
             password: hashedPass,
             roles_id: 2
           }
           const createdUser = await createUser(userData)
-          if (createdUser.affectedRows) {
+          const phone = {
+            phone: result.phone
+          }
+          const phoneNum = await addPhoneNumber(phone)
+          if (createdUser.affectedRows && phoneNum.affectedRows) {
             result = {
               ...result,
               password: undefined
@@ -136,7 +143,7 @@ module.exports = {
             return responseStandar(res, 'register failed', {}, 401, false)
           }
         } else {
-          return responseStandar(res, 'error', {}, 401, false)
+          return responseStandar(res, 'Error', { error: error.message }, 401, false)
         }
       }
       case 'custommer': {
