@@ -45,7 +45,7 @@ module.exports = {
       })
       responseStandar(res, `cart for user id ${id}`, { data })
     } else {
-      responseStandar(res, `User with id ${id} is not found`, {}, 404, false)
+      responseStandar(res, `User with id ${id} haven't put the item on cart`, {}, 404, false)
     }
   },
   deleteItem: (req, res) => {

@@ -3,12 +3,40 @@ const paging = require('../helpers/pagination')
 const joi = require('joi')
 const bcrypt = require('bcryptjs')
 const {
-  getProfileModel, updateProfilModel,
+  createUserModel, getProfileModel, updateProfilModel,
   updatePartProfileModel, deleteProfileModel, getUserByCondition, updateProfilDetailModel,
   readUser, constUser, getUserByConditionDetail
 } = require('../models/userDetailModel')
 
 module.exports = {
+  createDetailProfile: async (req, res) => {
+    const { id } = req.user
+    const pictures = `/uploads/${req.file.filename}`
+    const schema = joi.object({
+      phone: joi.string().required(),
+      gender: joi.string().required(),
+      birth: joi.string().required()
+    })
+    const { value: result, error } = schema.validate(req.body)
+    if (error) {
+      return responseStandar(res, 'error', { error: error.message }, 400, false)
+    } else {
+      const { phone, gender, birth } = result
+      const detail = {
+        user_id: id,
+        phone: phone,
+        gender: gender,
+        birth: birth,
+        photo: pictures
+      }
+      const detailProfil = await createUserModel(detail)
+      if (detailProfil.affectedRows) {
+        return responseStandar(res, 'detail added', { detail })
+      } else {
+        return responseStandar(res, 'cannot add detail', {}, 401, false)
+      }
+    }
+  },
   getProfile: async (req, res) => {
     const count = await constUser()
     const page = paging(req, count)
@@ -19,7 +47,6 @@ module.exports = {
   },
   getDetailUser: async (req, res) => {
     const { id } = req.user
-
     const results = await getProfileModel(id)
     if (results.length) {
       const data = results.map(data => {
@@ -37,7 +64,7 @@ module.exports = {
   updateProfile: async (req, res) => {
     const picture = `/uploads/${req.file.filename}`
     const schema = joi.object({
-      user_name: joi.string().required(),
+      name: joi.string().required(),
       email: joi.string().required(),
       password: joi.string().required(),
       phone: joi.string().required(),
@@ -51,7 +78,6 @@ module.exports = {
     } else {
       const { name, email, password, phone, gender, birth } = results
       const isExist = await getUserByCondition([{ email }])
-      console.log(isExist)
       let existEmail = 0
       if (isExist.length) {
         existEmail = isExist[0].id
@@ -65,7 +91,6 @@ module.exports = {
           if (isExist.length) {
             existPhone = isExist[0].user_id
           }
-          console.log(isExist, existPhone, id)
           if (existPhone === parseInt(id) || !isExist.length) {
             const salt = await bcrypt.genSalt(10)
             const hashedPassword = await bcrypt.hash(password, salt)
@@ -86,7 +111,7 @@ module.exports = {
               if (updateDetail.affectedRows) {
                 return responseStandar(res, 'Success! User has been updated!')
               } else {
-                return responseStandar(res, 'Failed to update user!', {}, 400, false)
+                return responseStandar(res, 'Failed update user!', {}, 400, false)
               }
             } else {
               return responseStandar(res, 'Failed to update user!', {}, 400, false)

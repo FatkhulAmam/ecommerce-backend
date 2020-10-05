@@ -1,5 +1,5 @@
 const { Router } = require('express')
-const { getDetailUser, updateProfile, updatePartProfile, deleteProfile } = require('../controller/userDetailController')
+const { createDetailProfile, getDetailUser, updateProfile, updatePartProfile, deleteProfile } = require('../controller/userDetailController')
 
 const router = Router()
 
@@ -10,6 +10,7 @@ const validationImage = require('../helpers/validationImg')
 
 // router.post('/', uploadHelper.single('pictures'), validationImage, createProfile)
 router.get('/', authMiddleware, getDetailUser)
+router.post('/', uploadHelper.single('pictures'), validationImage, createDetailProfile)
 router.delete('/:id', deleteProfile)
 router.put('/', uploadHelper.single('pictures'), validationImage, updateProfile)
 router.patch('/:id', uploadHelper.single('pictures'), validationImage, updatePartProfile)

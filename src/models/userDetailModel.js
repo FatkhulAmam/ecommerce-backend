@@ -52,7 +52,7 @@ module.exports = {
   getProfileModel: (data = {}) => {
     return new Promise((resolve, reject) => {
       db.query(`SELECT ${table}.user_id, ${table1}.user_name, ${table1}.email, ${table}.phone, ${table}.photo, ${table}.gender, ${table}.birth
-      FROM ${table} INNER JOIN ${table1} ON ${table}.user_id = ${table1}.id WHERE ${table}.id=?`, data, (err, result, field) => {
+      FROM ${table} INNER JOIN ${table1} ON ${table}.user_id = ${table1}.id WHERE ${table1}.id=?`, data, (err, result, field) => {
         if (err) {
           reject(err)
         } else {
@@ -61,12 +61,18 @@ module.exports = {
       })
     })
   },
-  // createUserModel: (arr, cb) => {
-  //   db.query(`INSERT INTO ${table} (user_id, user_name, phone, photo) VALUES ('${arr[0]}', '${arr[1]}', '${arr[2]}', '${arr[3]}')`, (err, result, field) => {
-  //     cb(err, result)
-  //   })
-  // },
-  updateProfilModel: (data = []) => {
+  createUserModel: (data = {}) => {
+    return new Promise((resolve, reject) => {
+      db.query(`INSERT INTO ${table} SET ?`, data, (err, result, field) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(result)
+        }
+      })
+    })
+  },
+  updateProfilModel: (data = {}) => {
     return new Promise((resolve, reject) => {
       db.query(`UPDATE ${table1} SET ? WHERE id=?`, data, (err, result, field) => {
         if (err) {
@@ -79,7 +85,7 @@ module.exports = {
   },
   updateProfilDetailModel: (data = {}) => {
     return new Promise((resolve, reject) => {
-      db.query(`UPDATE ${table} SET ? WHERE id=?`, data, (err, result, field) => {
+      db.query(`UPDATE ${table} SET ? WHERE user_id=?`, data, (err, result, field) => {
         if (err) {
           reject(err)
         } else {
