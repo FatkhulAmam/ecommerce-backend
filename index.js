@@ -15,6 +15,7 @@ const routerUser = require('./src/routes/userDetailsRoute')
 const routerAuth = require('./src/routes/authRoute')
 const routerCart = require('./src/routes/cartRoute')
 const routerRole = require('./src/routes/rolesRoute')
+const routerAddress = require('./src/routes/addressRoute')
 // const routerRating = require('./src/routes/ratingRoute')
 
 // import middleware
@@ -25,6 +26,7 @@ app.use('/product', routerProduct)
 app.use('/category', routerCategory)
 app.use('/cart', authMiddleware, routerCart)
 app.use('/user', authMiddleware, routerUser)
+app.use('/user', authMiddleware, routerAddress)
 app.use('/auth', routerAuth)
 app.use('/roles', authMiddleware, routerRole)
 

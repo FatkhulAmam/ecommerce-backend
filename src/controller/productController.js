@@ -94,10 +94,10 @@ module.exports = {
             return responseStandart(res, 'list item', { data: result, pageInfo })
           })
         } else {
-          return (res, 'no item', {}, 400, false)
+          return responseStandart(res, 'no item', {}, 400, false)
         }
       } else {
-        return (res, 'Internal Server error', {}, 500, false)
+        return responseStandart(res, 'Internal Server error', {}, 500, false)
       }
     })
   },
