@@ -2,7 +2,10 @@
 const joi = require('joi')
 const responseStandar = require('../helpers/response')
 const {
-  createCartModel, getCartUserModel, getCartDelModel, deleteItemModel
+  createCartModel,
+  getCartUserModel,
+  getCartDelModel,
+  deleteItemModel
 } = require('../models/cartModel')
 const responseStandart = require('../helpers/response')
 

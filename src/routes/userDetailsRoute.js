@@ -13,6 +13,6 @@ router.get('/', authMiddleware, getDetailUser)
 router.post('/', uploadHelper.single('pictures'), validationImage, createDetailProfile)
 router.delete('/', deleteProfile)
 router.put('/', uploadHelper.single('pictures'), validationImage, updateProfile)
-router.patch('/:id', uploadHelper.single('pictures'), validationImage, updatePartProfile)
+router.patch('/', uploadHelper.single('pictures'), validationImage, updatePartProfile)
 
 module.exports = router

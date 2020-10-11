@@ -1,5 +1,5 @@
 const db = require('../helpers/db')
-const table = 'addrress'
+const table = 'address'
 
 module.exports = {
   createAddressModel: (data = {}) => {

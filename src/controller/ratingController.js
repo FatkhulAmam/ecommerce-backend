@@ -1,19 +1,30 @@
 const joi = require('joi')
-const ratingModel = require('../models/ratingModel')
-const responseStandar = require('../helpers/response')
+const { giveRatingModel } = require('../models/ratingModel')
+const responseStandart = require('../helpers/response')
 
 module.exports = {
   giveRating: async (req, res) => {
+    const { id } = req.user
     const schema = joi.object({
-      product_id: joi.string().required(),
+      productId: joi.string().required(),
       rating: joi.string().required()
     })
-    const { value: result } = schema.validate(req.body)
-    const rating = await ratingModel.giveRatingModel(result)
-    if (rating.affectedRows) {
-      return responseStandar(res, 'added', { result })
+    const { value: result, error } = schema.validate(req.body)
+    if (error) {
+      return responseStandart(res, 'Failed create address', { Error: error.message }, 401, false)
     } else {
-      return responseStandar(res, 'failed give rating', {}, 401, false)
+      const { productId, rating } = result
+      const dataRating = {
+        user_id: id,
+        product_id: productId,
+        rating: rating
+      }
+      const createAddress = await giveRatingModel(dataRating)
+      if (createAddress.affectedRows) {
+        return responseStandart(res, 'address added', { dataRating })
+      } else {
+        return responseStandart(res, 'cannot add adsress', {}, 401, false)
+      }
     }
   }
 }

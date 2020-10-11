@@ -17,12 +17,12 @@ module.exports = {
     if (error) {
       return responseStandart(res, 'Failed create address', { Error: error.message }, 401, false)
     } else {
-      const { home, recipientName, rescipientPhone, address, city, postalCode } = result
+      const { home, recipientName, recipientPhone, address, city, postalCode } = result
       const dataAddress = {
         user_id: id,
         home: home,
         recipients_name: recipientName,
-        recipients_phone: rescipientPhone,
+        recipients_phone: recipientPhone,
         address: address,
         city: city,
         postal_code: postalCode

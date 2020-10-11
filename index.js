@@ -22,7 +22,7 @@ const routerAddress = require('./src/routes/addressRoute')
 const authMiddleware = require('./src/middlewares/auth')
 
 app.use('/product', routerProduct)
-// app.use('/product/rating', routerRating)
+// app.use('/product', authMiddleware, routerRating)
 app.use('/category', routerCategory)
 app.use('/cart', authMiddleware, routerCart)
 app.use('/user', authMiddleware, routerUser)
