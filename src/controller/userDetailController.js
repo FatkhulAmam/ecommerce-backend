@@ -4,7 +4,7 @@ const joi = require('joi')
 const bcrypt = require('bcryptjs')
 const {
   createUserModel, getProfileModel, updateProfilModel,
-  updatePartProfileModel, deleteProfileModel, getUserByCondition, updateProfilDetailModel,
+  updatePartProfileModel, deleteProfileModel, deleteProfileDetailModel, getUserByCondition, updateProfilDetailModel,
   readUser, constUser, getUserByConditionDetail
 } = require('../models/userDetailModel')
 
@@ -12,6 +12,7 @@ module.exports = {
   createDetailProfile: async (req, res) => {
     const { id } = req.user
     const pictures = `/uploads/${req.file.filename}`
+    console.log(req.file)
     const schema = joi.object({
       phone: joi.string().required(),
       gender: joi.string().required(),
@@ -151,20 +152,18 @@ module.exports = {
       return responseStandar(res, 'fill a field', {}, 401, false)
     }
   },
-  deleteProfile: (req, res) => {
-    const { id } = req.params
-    getProfileModel(id, result => {
-      if (result.length) {
-        deleteProfileModel(id, result => {
-          if (result.affectedRows) {
-            return responseStandar(res, 'profile deleted', {})
-          } else {
-            return responseStandar(res, 'cannot dalete profile', {}, 401, false)
-          }
-        })
+  deleteProfile: async (req, res) => {
+    const { id } = req.user
+    const result = await deleteProfileModel(id)
+    if (result.affectedRows) {
+      const results = await deleteProfileDetailModel(id)
+      if (results.affectedRows) {
+        return responseStandar(res, 'profile deleted', {})
       } else {
-        return responseStandar(res, 'cannot dalete profile', {}, 401, false)
+        return responseStandar(res, 'dalete profile denied', {}, 401, false)
       }
-    })
+    } else {
+      return responseStandar(res, 'cannot dalete profile', {}, 401, false)
+    }
   }
 }

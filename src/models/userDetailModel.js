@@ -101,7 +101,18 @@ module.exports = {
   // },
   deleteProfileModel: (data = {}) => {
     return new Promise((resolve, reject) => {
-      db.query(`DELETE FROM ${table} WHERE id= ?`, data, (err, result, field) => {
+      db.query(`DELETE FROM ${table1} WHERE id=?`, data, (err, result, field) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(result)
+        }
+      })
+    })
+  },
+  deleteProfileDetailModel: (data = {}) => {
+    return new Promise((resolve, reject) => {
+      db.query(`DELETE FROM ${table} WHERE user_id=?`, data, (err, result, field) => {
         if (err) {
           reject(err)
         } else {

@@ -11,7 +11,7 @@ const validationImage = require('../helpers/validationImg')
 // router.post('/', uploadHelper.single('pictures'), validationImage, createProfile)
 router.get('/', authMiddleware, getDetailUser)
 router.post('/', uploadHelper.single('pictures'), validationImage, createDetailProfile)
-router.delete('/:id', deleteProfile)
+router.delete('/', deleteProfile)
 router.put('/', uploadHelper.single('pictures'), validationImage, updateProfile)
 router.patch('/:id', uploadHelper.single('pictures'), validationImage, updatePartProfile)
 
