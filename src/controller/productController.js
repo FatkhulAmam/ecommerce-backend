@@ -54,7 +54,7 @@ module.exports = {
       searchValue = search || ''
     }
     if (!limit) {
-      limit = 8
+      limit = 10
     } else {
       limit = parseInt(limit)
     }
@@ -65,7 +65,6 @@ module.exports = {
     }
     const offset = (page - 1) * limit
     getAllItemModel([searchKey, searchValue], [sortBy, sortFrom], [limit, offset], (err, result) => {
-      console.log(result[0].name)
       if (!err) {
         const pageInfo = {
           count: 0,
