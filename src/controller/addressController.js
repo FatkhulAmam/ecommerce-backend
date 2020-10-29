@@ -37,11 +37,11 @@ module.exports = {
   },
   updateAddressController: async (req, res) => {
     const { id } = req.user
-    const { home, recipientName, recipientPhone, address, city, postalCode } = req.body
-    if (home.trim() && recipientName.trim() && recipientPhone.trim() && address.trim() && city.trim() && postalCode.trim()) {
+    const { home, recipientName, recipientPhone, address, city, postalCode, primaryAddress } = req.body
+    if (home.trim() && recipientName.trim() && recipientPhone.trim() && address.trim() && city.trim() && postalCode.trim() && primaryAddress) {
       getAddressModel(id, result => {
         if (result.length) {
-          updateAddressModel([home, recipientName, recipientPhone, address, city, postalCode], id, hasil => {
+          updateAddressModel([home, recipientName, recipientPhone, address, city, postalCode, primaryAddress], id, hasil => {
             console.log(hasil)
             if (hasil.affectedRows) {
               return responseStandart(res, `address update on user ${id}`, { data: result })
