@@ -17,12 +17,14 @@ const routerCart = require('./src/routes/cartRoute')
 const routerRole = require('./src/routes/rolesRoute')
 const routerAddress = require('./src/routes/addressRoute')
 const routerRating = require('./src/routes/ratingRoute')
+const routerCondition = require('./src/routes/conditionRoute')
 
 // import middleware
 const authMiddleware = require('./src/middlewares/auth')
 
 app.use('/product', routerProduct)
 app.use('/product', authMiddleware, routerRating)
+app.use('/product', authMiddleware, routerCondition)
 app.use('/category', routerCategory)
 app.use('/cart', authMiddleware, routerCart)
 app.use('/user', authMiddleware, routerUser)
