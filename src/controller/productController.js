@@ -19,8 +19,6 @@ module.exports = {
   // membuat data dengan mesmaukkan name, price, dan description
   createItem: (req, res) => {
     const { name, price, description, category } = req.body
-    const pictures = `/uploads/${req.file.filename}`
-    console.log(pictures)
     if (name && price && description && category) {
       createItemModel([name, price, description, category], (err, result) => {
         if (!err) {
@@ -56,7 +54,7 @@ module.exports = {
       searchValue = search || ''
     }
     if (!limit) {
-      limit = 8
+      limit = 10
     } else {
       limit = parseInt(limit)
     }
@@ -67,7 +65,6 @@ module.exports = {
     }
     const offset = (page - 1) * limit
     getAllItemModel([searchKey, searchValue], [sortBy, sortFrom], [limit, offset], (err, result) => {
-      console.log(result[0].name)
       if (!err) {
         const pageInfo = {
           count: 0,

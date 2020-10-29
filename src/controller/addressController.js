@@ -1,5 +1,5 @@
 const joi = require('joi')
-const { createAddressModel } = require('../models/addressModel')
+const { createAddressModel, getAddressModel, updateAddressModel } = require('../models/addressModel')
 const responseStandart = require('../helpers/response')
 
 module.exports = {
@@ -17,12 +17,12 @@ module.exports = {
     if (error) {
       return responseStandart(res, 'Failed create address', { Error: error.message }, 401, false)
     } else {
-      const { home, recipientName, rescipientPhone, address, city, postalCode } = result
+      const { home, recipientName, recipientPhone, address, city, postalCode } = result
       const dataAddress = {
         user_id: id,
         home: home,
         recipients_name: recipientName,
-        recipients_phone: rescipientPhone,
+        recipients_phone: recipientPhone,
         address: address,
         city: city,
         postal_code: postalCode
@@ -33,6 +33,24 @@ module.exports = {
       } else {
         return responseStandart(res, 'cannot add adsress', {}, 401, false)
       }
+    }
+  },
+  updateAddressController: async (req, res) => {
+    const { id } = req.user
+    const { home, recipientName, recipientPhone, address, city, postalCode } = req.body
+    if (home.trim() && recipientName.trim() && recipientPhone.trim() && address.trim() && city.trim() && postalCode.trim()) {
+      getAddressModel(id, result => {
+        if (result.length) {
+          updateAddressModel([home, recipientName, recipientPhone, address, city, postalCode], id, hasil => {
+            console.log(hasil)
+            if (hasil.affectedRows) {
+              return responseStandart(res, `address update on user ${id}`, { data: result })
+            } else {
+              return responseStandart(res, `user address on id ${id}, cannot be update`, {}, 400, false)
+            }
+          })
+        }
+      })
     }
   }
 }

@@ -22,7 +22,7 @@ const routerRating = require('./src/routes/ratingRoute')
 const authMiddleware = require('./src/middlewares/auth')
 
 app.use('/product', routerProduct)
-app.use('/rating', authMiddleware, routerRating)
+app.use('/product', authMiddleware, routerRating)
 app.use('/category', routerCategory)
 app.use('/cart', authMiddleware, routerCart)
 app.use('/user', authMiddleware, routerUser)

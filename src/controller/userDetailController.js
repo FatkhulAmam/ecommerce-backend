@@ -3,8 +3,8 @@ const paging = require('../helpers/pagination')
 const joi = require('joi')
 const bcrypt = require('bcryptjs')
 const {
-  createUserModel, getProfileModel, updateProfilModel,
-  updatePartProfileModel, deleteProfileModel, getUserByCondition, updateProfilDetailModel,
+  createUserModel, getProfileModel, updateProfilModel, updatePartProfile,
+  updatePartProfileDetailModel, deleteProfileModel, deleteProfileDetailModel, getUserByCondition, updateProfilDetailModel,
   readUser, constUser, getUserByConditionDetail
 } = require('../models/userDetailModel')
 
@@ -125,46 +125,50 @@ module.exports = {
       }
     }
   },
-  updatePartProfile: (req, res) => {
-    const { id } = req.params
-    const { idUser = '', userName = '', phone = '' } = req.body
+  updatePartProfile: async (req, res) => {
+    const { id } = req.user
     const pictures = `/uploads/${req.file.filename}`
-    if (idUser.trim() || userName.trim() || phone || pictures) {
-      getProfileModel(id, result => {
-        if (result.length) {
-          const data = Object.entries(req.body).map(item => {
-            return parseInt(item[1]) > 0 ? `${item[0]}=${item[1]}` : `${item[0]}='${item[1]}'`
-          })
-          updatePartProfileModel(id, data, result => {
-            console.log(data)
-            if (result.affectedRows) {
-              return responseStandar(res, `profile id ${id} updated`, { data: req.body })
-            } else {
-              return responseStandar(res, 'data cannot updated', {}, 401, false)
-            }
-          })
-        } else {
-          return responseStandar(res, 'no data be updated', {}, 401, false)
-        }
-      })
+    const { value: result, error } = req.body
+    if (error) {
+      return responseStandar(res, 'error', { error: error.message }, 401, false)
     } else {
-      return responseStandar(res, 'fill a field', {}, 401, false)
+      const { userName, email, password, phone, gender, birth } = result
+      const table1 = {
+        user_name: userName,
+        email: email,
+        password: password
+      }
+      const table2 = {
+        phone: phone,
+        gender: gender,
+        birth: birth,
+        picture: pictures
+      }
+      if (userName || email || password || phone || gender || birth || pictures) {
+        const data1 = await updatePartProfile(table1, id)
+        const data2 = await updatePartProfileDetailModel(table2, id)
+        if (data1.affectedRows || data2.affectedRows) {
+          return responseStandar(res, 'data update', { ...table1, ...table2 })
+        } else {
+          return responseStandar(res, 'cannot update name, email and password', {}, 401, false)
+        }
+      } else {
+        return responseStandar(res, 'cannot update name, email and password', {}, 401, false)
+      }
     }
   },
-  deleteProfile: (req, res) => {
-    const { id } = req.params
-    getProfileModel(id, result => {
-      if (result.length) {
-        deleteProfileModel(id, result => {
-          if (result.affectedRows) {
-            return responseStandar(res, 'profile deleted', {})
-          } else {
-            return responseStandar(res, 'cannot dalete profile', {}, 401, false)
-          }
-        })
+  deleteProfile: async (req, res) => {
+    const { id } = req.user
+    const result = await deleteProfileModel(id)
+    if (result.affectedRows) {
+      const results = await deleteProfileDetailModel(id)
+      if (results.affectedRows) {
+        return responseStandar(res, 'profile deleted', {})
       } else {
-        return responseStandar(res, 'cannot dalete profile', {}, 401, false)
+        return responseStandar(res, 'dalete profile denied', {}, 401, false)
       }
-    })
+    } else {
+      return responseStandar(res, 'cannot dalete profile', {}, 401, false)
+    }
   }
 }
