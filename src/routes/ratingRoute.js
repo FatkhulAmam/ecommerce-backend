@@ -1,6 +1,6 @@
 const router = require('express').Router()
-const { giveRating } = require('../controller/ratingController')
+const ratingControl = require('../controller/ratingController')
 
-router.post('/', giveRating)
+router.post('/', ratingControl.giveRating)
 
-module.export = router
+module.exports = router

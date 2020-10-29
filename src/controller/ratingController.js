@@ -4,16 +4,27 @@ const responseStandar = require('../helpers/response')
 
 module.exports = {
   giveRating: async (req, res) => {
+    const { id } = req.user
     const schema = joi.object({
-      product_id: joi.string().required(),
+      productId: joi.string().required(),
       rating: joi.string().required()
     })
-    const { value: result } = schema.validate(req.body)
-    const rating = await ratingModel.giveRatingModel(result)
-    if (rating.affectedRows) {
-      return responseStandar(res, 'added', { result })
+    const { value: result, error } = schema.validate(req.body)
+    if (error) {
+      return responseStandar(res, 'Error', { error: error.message }, 400, false)
     } else {
-      return responseStandar(res, 'failed give rating', {}, 401, false)
+      const { productId, rating } = result
+      const ratingData = {
+        user_id: id,
+        product_id: productId,
+        rating: rating
+      }
+      const addRating = await ratingModel.giveRatingModel(ratingData)
+      if (addRating.affectedRows) {
+        return responseStandar(res, 'added to cart', { result })
+      } else {
+        return responseStandar(res, 'cannot add to cart', {}, 401, false)
+      }
     }
   }
 }

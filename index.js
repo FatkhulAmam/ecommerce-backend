@@ -16,13 +16,13 @@ const routerAuth = require('./src/routes/authRoute')
 const routerCart = require('./src/routes/cartRoute')
 const routerRole = require('./src/routes/rolesRoute')
 const routerAddress = require('./src/routes/addressRoute')
-// const routerRating = require('./src/routes/ratingRoute')
+const routerRating = require('./src/routes/ratingRoute')
 
 // import middleware
 const authMiddleware = require('./src/middlewares/auth')
 
 app.use('/product', routerProduct)
-// app.use('/product/rating', routerRating)
+app.use('/rating', authMiddleware, routerRating)
 app.use('/category', routerCategory)
 app.use('/cart', authMiddleware, routerCart)
 app.use('/user', authMiddleware, routerUser)
@@ -33,6 +33,7 @@ app.use('/roles', authMiddleware, routerRole)
 // provide static file(images)
 app.use('/uploads', express.static('assets/uploads'))
 
+// runing aplication
 app.listen(8180, () => {
   console.log('aplication running in port 8180')
 })

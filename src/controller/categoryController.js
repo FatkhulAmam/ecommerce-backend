@@ -1,21 +1,21 @@
 const qs = require('querystring')
-const { getAllCategoryModel, searchCategoryModel, createCategoryModel, getCategoryModel, deleteCategoryModel } = require('../models/categoryModel')
+const responseStandart = require('../helpers/response')
+const {
+  getAllCategoryModel,
+  searchCategoryModel,
+  createCategoryModel,
+  getCategoryModel,
+  deleteCategoryModel
+} = require('../models/categoryModel')
 
 module.exports = {
   createCategory: (req, res) => {
     const { categoryName } = req.body
     createCategoryModel(categoryName, (err, result) => {
       if (!err) {
-        res.send({
-          success: true,
-          message: 'category created',
-          data: { ...req.body }
-        })
+        return responseStandart(res, 'category added', { data: result })
       } else {
-        res.send({
-          success: false,
-          message: 'canno create category'
-        })
+        return responseStandart(res, 'category cannot added', {}, 401, false)
       }
     })
   },
@@ -23,16 +23,9 @@ module.exports = {
     const { id } = req.params
     getCategoryModel(id, result => {
       if (result.length) {
-        res.send({
-          success: true,
-          message: ' showing...',
-          data: result[0]
-        })
+        return responseStandart(res, 'showing...', { data: result[0] })
       } else {
-        res.send({
-          success: false,
-          message: 'bad Request'
-        })
+        return responseStandart(res, 'bad request', {}, 401, false)
       }
     })
   },
@@ -42,22 +35,13 @@ module.exports = {
       if (result.length) {
         deleteCategoryModel(id, result => {
           if (result.affectedRows) {
-            res.send({
-              success: false,
-              message: `category ${id} deleted`
-            })
+            return responseStandart(res, 'category deleted')
           } else {
-            res.send({
-              success: false,
-              message: `cannot delete category ${id}`
-            })
+            return responseStandart(res, 'cannot delete category', {}, 401, false)
           }
         })
       } else {
-        res.send({
-          success: false,
-          message: 'no category can be delete'
-        })
+        return responseStandart(res, 'no category can be delete', {}, 401, false)
       }
     })
   },
@@ -124,16 +108,10 @@ module.exports = {
             })
           })
         } else {
-          res.send({
-            success: 'false',
-            message: 'No item'
-          })
+          return responseStandart(res, 'no category', {}, 401, false)
         }
       } else {
-        res.status(500).send({
-          success: 'false',
-          message: 'internal server error'
-        })
+        return responseStandart(res, 'internal server error', {}, 500, false)
       }
     })
   }

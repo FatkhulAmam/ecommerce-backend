@@ -2,6 +2,7 @@ const db = require('../helpers/db')
 const table = 'product'
 // const tableImage = 'product_image'
 const table1 = 'category'
+// const table2 = 'rating'
 
 module.exports = {
   getItemModel: (id, cb) => {
