@@ -3,8 +3,8 @@ const paging = require('../helpers/pagination')
 const joi = require('joi')
 const bcrypt = require('bcryptjs')
 const {
-  createUserModel, getProfileModel, updateProfilModel, updatePartProfile,
-  updatePartProfileDetailModel, deleteProfileModel, deleteProfileDetailModel, getUserByCondition, updateProfilDetailModel,
+  createUserModel, getProfileModel, updateProfilModel, updatePartProfileModel,
+  deleteProfileModel, deleteProfileDetailModel, getUserByCondition, updateAvatarModel, updateProfilDetailModel,
   readUser, constUser, getUserByConditionDetail
 } = require('../models/userDetailModel')
 
@@ -49,12 +49,13 @@ module.exports = {
     const { id } = req.user
     const results = await getProfileModel(id)
     if (results.length) {
-      const data = results.map(data => {
-        data = {
-          ...data,
-          password: null
+      console.log(results.length)
+      const data = results.map(profile => {
+        profile = {
+          ...profile,
+          password: undefined
         }
-        return data
+        return profile
       })
       responseStandar(res, `Detail of user id ${id}`, { data })
     } else {
@@ -62,7 +63,7 @@ module.exports = {
     }
   },
   updateProfile: async (req, res) => {
-    const picture = `/uploads/${req.file.filename}`
+    const pictures = (req.file ? `uploads/${req.file.filename}` : undefined)
     const schema = joi.object({
       name: joi.string().required(),
       email: joi.string().required(),
@@ -105,7 +106,7 @@ module.exports = {
                 phone: phone,
                 gender: gender,
                 birth: birth,
-                photo: picture
+                photo: pictures
               }
               const updateDetail = await updateProfilDetailModel([detail, id])
               if (updateDetail.affectedRows) {
@@ -127,34 +128,47 @@ module.exports = {
   },
   updatePartProfile: async (req, res) => {
     const { id } = req.user
-    const pictures = `/uploads/${req.file.filename}`
-    const { value: result, error } = req.body
-    if (error) {
-      return responseStandar(res, 'error', { error: error.message }, 401, false)
-    } else {
-      const { userName, email, password, phone, gender, birth } = result
-      const table1 = {
-        user_name: userName,
-        email: email,
-        password: password
-      }
-      const table2 = {
-        phone: phone,
-        gender: gender,
-        birth: birth,
-        picture: pictures
-      }
-      if (userName || email || password || phone || gender || birth || pictures) {
-        const data1 = await updatePartProfile(table1, id)
-        const data2 = await updatePartProfileDetailModel(table2, id)
-        if (data1.affectedRows || data2.affectedRows) {
-          return responseStandar(res, 'data update', { ...table1, ...table2 })
+    const photo = (req.file ? `uploads/${req.file.filename}` : undefined)
+    const { user_name = '', email = '', phone = 0, gender = '', birth = '' } = req.body
+    const results = await getProfileModel(id)
+    if (results.length) {
+      if (user_name || email || phone || photo || gender || birth) {
+        const table = {
+          ...req.body
+        }
+        const data = await updatePartProfileModel([table, id])
+        if (data.affectedRows) {
+          return responseStandar(res, 'data update', { data: { ...table } })
         } else {
           return responseStandar(res, 'cannot update name, email and password', {}, 401, false)
         }
       } else {
         return responseStandar(res, 'cannot update name, email and password', {}, 401, false)
       }
+    } else {
+      responseStandar(res, `User with id ${id} is not found`, {}, 404, false)
+    }
+  },
+  updateAvatar: async (req, res) => {
+    const { id } = req.user
+    const pictures = (req.file ? `uploads/${req.file.filename}` : undefined)
+    const results = await getProfileModel(id)
+    if (results.length) {
+      if (pictures) {
+        const table = {
+          photo: pictures
+        }
+        const data = await updateAvatarModel([table, id])
+        if (data.affectedRows) {
+          return responseStandar(res, 'picture update', { data: { ...table } })
+        } else {
+          return responseStandar(res, 'cannot update pictures', {}, 401, false)
+        }
+      } else {
+        return responseStandar(res, 'cannot update pictures', {}, 401, false)
+      }
+    } else {
+      responseStandar(res, `User with id ${id} is not found`, {}, 404, false)
     }
   },
   deleteProfile: async (req, res) => {

@@ -1,6 +1,6 @@
 const db = require('../helpers/db')
 const table = 'product'
-// const tableImage = 'product_image'
+const tableImage = 'product_image'
 const table1 = 'category'
 // const table2 = 'rating'
 
@@ -13,6 +13,11 @@ module.exports = {
   createItemModel: (arr, cb) => {
     db.query(`INSERT INTO ${table} (name, price, description, category) 
     VALUES ("${arr[0]}", ${arr[1]}, "${arr[2]}", ${arr[3]})`, (_err, result, field) => {
+      cb(_err, result)
+    })
+  },
+  addItemPictureMOdel: (cb) => {
+    db.query(`INSERT INTO ${tableImage} VALUES `, (_err, result, field) => {
       cb(_err, result)
     })
   },

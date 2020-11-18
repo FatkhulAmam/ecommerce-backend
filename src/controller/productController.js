@@ -1,7 +1,9 @@
 const qs = require('querystring')
 const responseStandart = require('../helpers/response')
 const {
-  getItemModel, createItemModel, getAllItemModel, searchItemModel, updateItemModel, updatePartialItemModel, deleItemModel
+  getItemModel, createItemModel, getAllItemModel,
+  searchItemModel, updateItemModel, updatePartialItemModel,
+  deleItemModel
 } = require('../models/productModel')
 
 module.exports = {
@@ -130,6 +132,7 @@ module.exports = {
           const data = Object.entries(req.body).map(item => {
             return parseInt(item[1]) > 0 ? `${item[0]}=${item[1]}` : `${item[0]}='${item[1]}'`
           })
+          console.log(data)
           updatePartialItemModel(id, data, result => {
             if (result.affectedRows) {
               return responseStandart(res, `data id ${id} updated`, { data: req.body })

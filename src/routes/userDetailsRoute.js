@@ -1,18 +1,17 @@
 const { Router } = require('express')
-const { createDetailProfile, getDetailUser, updateProfile, updatePartProfile, deleteProfile } = require('../controller/userDetailController')
+const { createDetailProfile, getDetailUser, updateProfile, updatePartProfile, deleteProfile, updateAvatar } = require('../controller/userDetailController')
 
 const router = Router()
 
 const authMiddleware = require('../middlewares/auth')
 
 const uploadHelper = require('../helpers/upload')
-const validationImage = require('../helpers/validationImg')
 
-// router.post('/', uploadHelper.single('pictures'), validationImage, createProfile)
 router.get('/', authMiddleware, getDetailUser)
-router.post('/', uploadHelper.single('pictures'), validationImage, createDetailProfile)
+router.post('/', uploadHelper.single('photo'), createDetailProfile)
 router.delete('/', deleteProfile)
-router.put('/', uploadHelper.single('pictures'), validationImage, updateProfile)
-router.patch('/', uploadHelper.single('pictures'), validationImage, updatePartProfile)
+router.put('/', uploadHelper.single('photo'), updateProfile)
+router.patch('/', updatePartProfile)
+router.patch('/avatar', uploadHelper.single('pictures'), updateAvatar)
 
 module.exports = router

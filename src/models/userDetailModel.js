@@ -1,13 +1,10 @@
 const db = require('../helpers/db')
-const table = 'user_detail'
-const table1 = 'user'
+const table = 'user'
 
 module.exports = {
   readUser: (data = []) => {
     return new Promise((resolve, reject) => {
-      db.query(`SELECT ${table}.user_id, ${table1}.user_name, ${table1}.email, ${table}.phone, ${table}.photo, ${table}.gender, ${table}.birth
-      FROM ${table} INNER JOIN ${table1} ON ${table}.user_id = ${table1}.id 
-      LIMIT ? OFFSET ?`, data, (err, results, fields) => {
+      db.query(`SELECT * FROM ${table}`, data, (err, results, fields) => {
         if (err) {
           reject(err)
         } else {
@@ -29,7 +26,7 @@ module.exports = {
   },
   getUserByCondition: (data = {}) => {
     return new Promise((resolve, reject) => {
-      db.query(`SELECT * FROM ${table1} WHERE ?`, data, (err, result, fields) => {
+      db.query(`SELECT * FROM ${table} WHERE ?`, data, (err, result, fields) => {
         if (err) {
           reject(err)
         } else {
@@ -51,8 +48,7 @@ module.exports = {
   },
   getProfileModel: (data = {}) => {
     return new Promise((resolve, reject) => {
-      db.query(`SELECT ${table}.user_id, ${table1}.user_name, ${table1}.email, ${table}.phone, ${table}.photo, ${table}.gender, ${table}.birth
-      FROM ${table} INNER JOIN ${table1} ON ${table}.user_id = ${table1}.id WHERE ${table1}.id=?`, data, (err, result, field) => {
+      db.query(`SELECT * FROM ${table} WHERE id=?`, data, (err, result, field) => {
         if (err) {
           reject(err)
         } else {
@@ -72,18 +68,8 @@ module.exports = {
       })
     })
   },
+  // update all user
   updateProfilModel: (data = {}) => {
-    return new Promise((resolve, reject) => {
-      db.query(`UPDATE ${table1} SET ? WHERE id=?`, data, (err, result, field) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve(result)
-        }
-      })
-    })
-  },
-  updatePartProfileModel: (data = {}) => {
     return new Promise((resolve, reject) => {
       db.query(`UPDATE ${table} SET ? WHERE id=?`, data, (err, result, field) => {
         if (err) {
@@ -94,9 +80,9 @@ module.exports = {
       })
     })
   },
-  updatePartProfileDetailModel: (data = {}) => {
+  updateAvatarModel: (data = {}) => {
     return new Promise((resolve, reject) => {
-      db.query(`UPDATE ${table} SET ? WHERE user_id=?`, data, (err, result, field) => {
+      db.query(`UPDATE ${table} SET ? WHERE id=?`, data, (err, result, field) => {
         if (err) {
           reject(err)
         } else {
@@ -105,14 +91,21 @@ module.exports = {
       })
     })
   },
-  // updatePartProfileModel: (id, data, cb) => {
-  //   db.query(`UPDATE ${table} SET ${data} WHERE id=${id}`, (_err, result, field) => {
-  //     cb(result)
-  //   })
-  // },
+  // update partialy
+  updatePartProfileModel: (data) => {
+    return new Promise((resolve, reject) => {
+      db.query(`UPDATE ${table} SET ? WHERE id=?`, data, (err, result, field) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(result)
+        }
+      })
+    })
+  },
   deleteProfileModel: (data = {}) => {
     return new Promise((resolve, reject) => {
-      db.query(`DELETE FROM ${table1} WHERE id=?`, data, (err, result, field) => {
+      db.query(`DELETE FROM ${table} WHERE id=?`, data, (err, result, field) => {
         if (err) {
           reject(err)
         } else {

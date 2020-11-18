@@ -1,10 +1,11 @@
 const multer = require('multer')
 
-// const maxSize = 1 * 500 * 500
-
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'assets/uploads/')
+    if (!file) {
+      return cb(new Error('Image cant be null'), false)
+    }
+    cb(null, 'assets/uploads')
   },
   filename: (req, file, cb) => {
     const ext = file.originalname.split('.')[file.originalname.split('.').length - 1]
@@ -13,4 +14,16 @@ const storage = multer.diskStorage({
   }
 })
 
-module.exports = multer({ storage })
+const fileFilter = (req, file, cb) => {
+  var ekstensi = ['image/jpeg', 'image/jpg', 'image/png', 'image/PNG']
+  if (ekstensi.includes(file.mimetype)) {
+    return cb(null, true)
+  }
+  return cb(new Error('Invalid file type. Only image files are allowed.'), false)
+}
+
+module.exports = multer({
+  storage,
+  fileFilter,
+  limit: { fileSize: 1024 * 1024 }
+})

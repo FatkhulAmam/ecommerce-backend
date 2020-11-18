@@ -55,7 +55,7 @@ module.exports = {
   },
   CustommerLoginController: async (req, res) => {
     const { email, password } = req.body
-    const data = await getUserByCondition([{ email }])
+    const data = await getUserByCondition([email])
     const compared = await bcrypt.compare(password, data[0].password)
     if (data.length) {
       if (data[0].roles_id === 3) {
@@ -148,7 +148,7 @@ module.exports = {
       }
       case 'custommer': {
         const schema = joi.object({
-          user_name: joi.string().required(),
+          name: joi.string().required(),
           email: joi.string().required(),
           password: joi.string().required()
         })
@@ -157,7 +157,7 @@ module.exports = {
           const salt = bcrypt.genSaltSync(10)
           const hashedPass = bcrypt.hashSync(result.password, salt)
           const userData = {
-            user_name: result.user_name,
+            user_name: result.name,
             email: result.email,
             password: hashedPass,
             roles_id: 3

@@ -11,15 +11,14 @@ const {
 // middleware
 // const authMiddleware = require('../middlewares/auth')
 
-// const uploadHelper = require('../helpers/upload')
-// const validationImage = require('../helpers/validationImg')
+const uploadHelper = require('../helpers/upload')
 const router = Router()
 
 router.get('/', getItem)
 router.get('/:id', getDetailItem)
 
 // manage product as a loged user
-router.post('/', createItem)
+router.post('/', uploadHelper.array('pictures', 4), createItem)
 
 router.put('/:id', updateItem)
 

@@ -5,7 +5,7 @@ const table1 = 'user_detail'
 module.exports = {
   getUserByCondition: (data = {}) => {
     return new Promise((resolve, reject) => {
-      db.query(`SELECT * FROM ${table} WHERE ?`, data, (err, result, fields) => {
+      db.query(`SELECT * FROM ${table} WHERE email = ?`, data, (err, result, fields) => {
         if (err) {
           reject(err)
         } else {
