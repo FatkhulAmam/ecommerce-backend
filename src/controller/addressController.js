@@ -1,5 +1,5 @@
 const joi = require('joi')
-const { createAddressModel, getAddressModel, updateAddressModel } = require('../models/addressModel')
+const { createAddressModel, getAddressModel, updateAddressModel, getAddressByIdModel, getAddressByUserIdModel, updatePartAddressModel } = require('../models/addressModel')
 const responseStandart = require('../helpers/response')
 
 module.exports = {
@@ -25,7 +25,8 @@ module.exports = {
         recipients_phone: recipientPhone,
         address: address,
         city: city,
-        postal_code: postalCode
+        postal_code: postalCode,
+        primary_address: 1
       }
       const createAddress = await createAddressModel(dataAddress)
       if (createAddress.affectedRows) {
@@ -33,6 +34,23 @@ module.exports = {
       } else {
         return responseStandart(res, 'cannot add adsress', {}, 401, false)
       }
+    }
+  },
+  getAddressControl: async (req, res) => {
+    const { id } = req.user
+    const results = await getAddressByUserIdModel(id)
+    if (results.length) {
+      console.log(results.length)
+      const data = results.map(profile => {
+        profile = {
+          ...profile,
+          password: undefined
+        }
+        return profile
+      })
+      responseStandart(res, `address of user id ${id}`, { data })
+    } else {
+      responseStandart(res, `address for user with id ${id} is not found`, {}, 404, false)
     }
   },
   updateAddressController: async (req, res) => {
@@ -52,5 +70,28 @@ module.exports = {
         }
       })
     }
-  }
+  },
+  updatePartAddress: async (req, res) => {
+    const { id } = req.params
+    const { home = '', recipient_name = '', recipient_phone = 0, address = '', city = '', postal_code = 0, primary_address = 1 } = req.body
+    const results = await getAddressByIdModel(id)
+    console.log(id)
+    if (results.length) {
+      if (home || recipient_name || recipient_phone || address || city || postal_code || primary_address) {
+        const table = {
+          ...req.body
+        }
+        const data = await updatePartAddressModel([table, id])
+        if (data.affectedRows) {
+          return responseStandart(res, 'address update', { data: { ...table } })
+        } else {
+          return responseStandart(res, 'cannot update address', {}, 401, false)
+        }
+      } else {
+        return responseStandart(res, 'cannot update address', {}, 401, false)
+      }
+    } else {
+      responseStandart(res, `address with id ${id} is not found`, {}, 404, false)
+    }
+  },
 }

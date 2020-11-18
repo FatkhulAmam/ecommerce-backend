@@ -30,5 +30,40 @@ module.exports = {
     (_err, hasil, field) => {
       cb(hasil)
     })
+  },
+  getAddressByIdModel: (data = {}) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT * FROM ${table} WHERE id=?`, data, (err, result, field) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(result)
+        }
+      })
+    })
+  },
+  // get address user by id user
+  getAddressByUserIdModel: (data = {}) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT * FROM ${table} WHERE user_id=?`, data, (err, result, field) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(result)
+        }
+      })
+    })
+  },
+  // update partialy
+  updatePartAddressModel: (data) => {
+    return new Promise((resolve, reject) => {
+      db.query(`UPDATE ${table} SET ? WHERE id=?`, data, (err, result, field) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(result)
+        }
+      })
+    })
   }
 }
