@@ -128,11 +128,10 @@ module.exports = {
   },
   updatePartProfile: async (req, res) => {
     const { id } = req.user
-    const photo = (req.file ? `uploads/${req.file.filename}` : undefined)
     const { user_name = '', email = '', phone = 0, gender = '', birth = '' } = req.body
     const results = await getProfileModel(id)
     if (results.length) {
-      if (user_name || email || phone || photo || gender || birth) {
+      if (user_name || email || phone || gender || birth) {
         const table = {
           ...req.body
         }
@@ -140,10 +139,10 @@ module.exports = {
         if (data.affectedRows) {
           return responseStandar(res, 'data update', { data: { ...table } })
         } else {
-          return responseStandar(res, 'cannot update name, email and password', {}, 401, false)
+          return responseStandar(res, 'cannot update data', {}, 401, false)
         }
       } else {
-        return responseStandar(res, 'cannot update name, email and password', {}, 401, false)
+        return responseStandar(res, 'cannot update user name, email, phone, gender, birth', {}, 401, false)
       }
     } else {
       responseStandar(res, `User with id ${id} is not found`, {}, 404, false)
