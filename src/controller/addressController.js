@@ -1,5 +1,9 @@
 const joi = require('joi')
-const { createAddressModel, getAddressModel, updateAddressModel, getAddressByIdModel, getAddressByUserIdModel, updatePartAddressModel } = require('../models/addressModel')
+const {
+  createAddressModel, getAddressModel,
+  updateAddressModel, getAddressByIdModel,
+  getAddressByUserIdModel, updatePartAddressModel
+} = require('../models/addressModel')
 const responseStandart = require('../helpers/response')
 
 module.exports = {

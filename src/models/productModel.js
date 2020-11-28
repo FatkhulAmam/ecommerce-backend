@@ -16,8 +16,8 @@ module.exports = {
       cb(_err, result)
     })
   },
-  addItemPictureMOdel: (cb) => {
-    db.query(`INSERT INTO ${tableImage} VALUES `, (_err, result, field) => {
+  addProductPictureModel: (arr, cb) => {
+    db.query(`INSERT INTO ${tableImage} (product_id, url) VALUES (${arr[0]}, "${arr[1]}")`, (_err, result, field) => {
       cb(_err, result)
     })
   },
@@ -38,8 +38,11 @@ module.exports = {
   },
   getAllItemModel: (arr, sort, num, cb) => {
     db.query(`
-    SELECT ${table}.id, ${table1}.category_name, ${table}.name, ${table}.price, ${table}.description, ${table}.input_date, ${table}.update_date
-    FROM ${table} INNER JOIN ${table1} ON ${table}.category = ${table1}.id
+    SELECT ${table}.id, ${table1}.category_name, ${table}.name, ${table}.price,
+    ${table}.description, ${table}.input_date, ${table}.update_date, ${tableImage}.url
+    FROM ${table} 
+    INNER JOIN ${table1} ON ${table}.category = ${table1}.id
+    INNER JOIN ${tableImage} on ${table}.id = ${tableImage}.product_id
     WHERE ${arr[0]} 
     LIKE '%${arr[1]}%' 
     ORDER BY ${sort[0]} ${sort[1]} 

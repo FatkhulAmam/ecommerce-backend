@@ -5,7 +5,8 @@ const {
   createItem,
   updateItem,
   updateItemPartial,
-  deleteItem
+  deleteItem,
+  addImageProduct
 } = require('../controller/productController')
 
 // middleware
@@ -16,13 +17,12 @@ const router = Router()
 
 router.get('/', getItem)
 router.get('/:id', getDetailItem)
-
-// manage product as a loged user
-router.post('/', uploadHelper.array('pictures', 4), createItem)
+router.post('/', createItem)
+router.post('/image/:id', uploadHelper.single('pictures'), addImageProduct)
 
 router.put('/:id', updateItem)
 
-router.patch('/:id', updateItemPartial)
+router.patch('/:id', uploadHelper.array('pictures', 4), updateItemPartial)
 
 router.delete('/:id', deleteItem)
 

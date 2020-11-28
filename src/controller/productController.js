@@ -3,7 +3,7 @@ const responseStandart = require('../helpers/response')
 const {
   getItemModel, createItemModel, getAllItemModel,
   searchItemModel, updateItemModel, updatePartialItemModel,
-  deleItemModel
+  deleItemModel, addProductPictureModel
 } = require('../models/productModel')
 
 module.exports = {
@@ -34,7 +34,6 @@ module.exports = {
     }
   },
   // menampilkan semua data pada halaman berdasarkan page yang dimasukkan dan limit yang diberikan
-  // mencari data berdasarkan nama no work
   getItem: (req, res) => {
     let { page, limit, search, sort } = req.query
     let sortBy = ''
@@ -162,6 +161,25 @@ module.exports = {
         })
       } else {
         return (res, 'no data founded', {}, 400, false)
+      }
+    })
+  },
+  addImageProduct: (req, res) => {
+    const { id } = req.params
+    const pictures = `uploads/${req.file.filename}`
+    getItemModel(id, result => {
+      if (id && pictures) {
+        if (result.length) {
+          addProductPictureModel([parseInt(id), pictures], (err, result) => {
+            if (!err) {
+              return responseStandart(res, 'picture has been added', { data: { id, pictures } })
+            } else {
+              return responseStandart(res, 'picture cannot be added', {}, 400, false)
+            }
+          })
+        }
+      } else {
+        return responseStandart(res, 'no item cannot be added picture', {}, 400, false)
       }
     })
   }
