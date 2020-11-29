@@ -6,7 +6,13 @@ const table1 = 'category'
 
 module.exports = {
   getItemModel: (id, cb) => {
-    db.query(`SELECT * FROM ${table} WHERE id=${id}`, (_err, result, field) => {
+    db.query(`
+    SELECT ${table}.id, ${table1}.category_name, ${table}.name, ${table}.price,
+    ${table}.description, ${table}.input_date, ${table}.update_date, ${tableImage}.url
+    FROM ${table}
+    INNER JOIN ${table1} ON ${table}.category = ${table1}.id
+    INNER JOIN ${tableImage} on ${table}.id = ${tableImage}.product_id
+    WHERE ${table}.id=${id}`, (_err, result, field) => {
       cb(result)
     })
   },
