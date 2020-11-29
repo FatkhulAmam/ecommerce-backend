@@ -39,7 +39,14 @@ app.use('/payment/methode', routePaymentMethode)
 // provide static file(images)
 app.use('/uploads', express.static('assets/uploads'))
 
-// runing aplication
+// runing aplication backend
+app.get('/', (req, res) => {
+  res.send({
+    success: true,
+    message: 'Blanja API running well'
+  })
+})
+
 app.listen(8180, () => {
-  console.log('aplication running in port 8180')
+  console.log('blanja API running in port 8180')
 })
