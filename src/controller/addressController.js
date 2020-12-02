@@ -59,11 +59,17 @@ module.exports = {
   },
   getAddressById: async (req, res) => {
     const { id } = req.params
+    const user = req.user.id
     const results = await getAddressByIdModel(id)
-    if (results.length) {
-      return responseStandart(res, `user with id ${id}`, { data: results })
+    console.log(results[0].user_id)
+    if (user === results[0].user_id) {
+      if (results.length) {
+        return responseStandart(res, `user with id ${id}`, { data: results })
+      } else {
+        return responseStandart(res, `cannot get id ${id} address`, {}, 401, false)
+      }
     } else {
-      return responseStandart(res, `cannot get id ${id} address`, {}, 401, false)
+      return responseStandart(res, `cannot get user with ${id}`, {}, 401, false)
     }
   },
   updateAddressController: async (req, res) => {
@@ -106,5 +112,5 @@ module.exports = {
     } else {
       responseStandart(res, `address with id ${id} is not found`, {}, 404, false)
     }
-  },
+  }
 }
