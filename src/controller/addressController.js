@@ -57,6 +57,15 @@ module.exports = {
       responseStandart(res, `address for user with id ${id} is not found`, {}, 404, false)
     }
   },
+  getAddressById: async (req, res) => {
+    const { id } = req.params
+    const results = await getAddressByIdModel(id)
+    if (results.length) {
+      return responseStandart(res, `user with id ${id}`, { data: results })
+    } else {
+      return responseStandart(res, `cannot get id ${id} address`, {}, 401, false)
+    }
+  },
   updateAddressController: async (req, res) => {
     const { id } = req.user
     const { home, recipientName, recipientPhone, address, city, postalCode, primaryAddress } = req.body
