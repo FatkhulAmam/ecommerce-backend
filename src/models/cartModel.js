@@ -2,6 +2,7 @@ const db = require('../helpers/db')
 const table1 = 'cart'
 const table2 = 'user'
 const table3 = 'product'
+const table4 = 'product_image'
 
 module.exports = {
   createCartModel: (data = {}) => {
@@ -17,10 +18,11 @@ module.exports = {
   },
   getCartUserModel: (data = {}) => {
     return new Promise((resolve, reject) => {
-      db.query(`SELECT ${table2}.user_name, ${table3}.name, ${table1}.amount, ${table3}.price
+      db.query(`SELECT ${table1}.id, ${table2}.user_name, ${table3}.name, ${table1}.amount, ${table3}.price, ${table4}.url
        FROM ${table1} 
        INNER JOIN ${table3} ON ${table1}.items_id = ${table3}.id
        INNER JOIN ${table2} ON ${table1}.user_id=${table2}.id
+       INNER JOIN ${table4} ON ${table1}.items_id=${table4}.product_id
        WHERE ${table1}.user_id=?`, data, (err, result, fields) => {
         if (err) {
           reject(err)
