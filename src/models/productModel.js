@@ -7,7 +7,7 @@ const table1 = 'category'
 module.exports = {
   getItemModel: (id, cb) => {
     db.query(`
-    SELECT ${table}.id, ${table1}.category_name, ${table}.name, ${table}.price,
+    SELECT ${table}.id, ${table1}.category_name, ${table}.category, ${table}.name, ${table}.price,
     ${table}.description, ${table}.input_date, ${table}.update_date, ${tableImage}.url
     FROM ${table}
     INNER JOIN ${table1} ON ${table}.category = ${table1}.id

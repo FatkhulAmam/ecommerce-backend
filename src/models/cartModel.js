@@ -16,6 +16,17 @@ module.exports = {
       })
     })
   },
+  getPriceModel: (data = {}) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT ${table3}.price FROM ${table1} INNER JOIN ${table3} ON ${table1}.items_id = ${table3}.id WHERE ${table1}.user_id=?`, data, (err, result, fields) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(result)
+        }
+      })
+    })
+  },
   getCartUserModel: (data = {}) => {
     return new Promise((resolve, reject) => {
       db.query(`SELECT ${table1}.id, ${table2}.user_name, ${table3}.name, ${table1}.amount, ${table3}.price, ${table4}.url

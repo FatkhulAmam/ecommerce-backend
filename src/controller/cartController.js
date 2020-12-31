@@ -5,7 +5,8 @@ const {
   createCartModel,
   getCartUserModel,
   getCartDelModel,
-  deleteItemModel
+  deleteItemModel,
+  getPriceModel
 } = require('../models/cartModel')
 const responseStandart = require('../helpers/response')
 
@@ -37,16 +38,19 @@ module.exports = {
   getCartUser: async (req, res) => {
     const { id } = req.user
     const results = await getCartUserModel(id)
-    console.log(results.length)
+    const priceAll = await getPriceModel(id)
+    const dataPrice = priceAll.map(i => i.price)
+    const sumPrice = dataPrice.reduce(function (a, b) {
+      return a + b
+    }, 0)
     if (results.length) {
       const data = results.map(data => {
         const dataValue = {
-          ...data,
-          total: data.price * data.amount
+          ...data
         }
         return dataValue
       })
-      responseStandar(res, `cart for user id ${id}`, { data })
+      responseStandar(res, `cart for user id ${id}`, { data, sumPrice })
     } else {
       responseStandar(res, `User with id ${id} haven't put the item on cart`, {}, 404, false)
     }
