@@ -10,8 +10,9 @@ const {
 
 module.exports = {
   createCategory: (req, res) => {
+    const picture = `uploads/${req.file.filename}`
     const { categoryName } = req.body
-    createCategoryModel(categoryName, (err, result) => {
+    createCategoryModel([categoryName, picture], (err, result) => {
       if (!err) {
         return responseStandart(res, 'category added', { data: result })
       } else {

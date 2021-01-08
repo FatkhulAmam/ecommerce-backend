@@ -3,8 +3,8 @@ const table1 = 'product'
 const table2 = 'category'
 
 module.exports = {
-  createCategoryModel: (categoryName, cb) => {
-    db.query(`INSERT INTO ${table2} (category_name) VALUES ('${categoryName}')`, (_err, result, field) => {
+  createCategoryModel: (arr, cb) => {
+    db.query(`INSERT INTO ${table2} (category_name, photo) VALUES ('${arr[0]}', '${arr[1]}')`, (_err, result, field) => {
       cb(_err, result)
     })
   },
